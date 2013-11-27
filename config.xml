@@ -1,0 +1,7 @@
+<?xml version='1.0'?>
+<config>
+    <host>localhost</host>
+    <user>tinyblog</user>
+    <passwd>123456</passwd>
+    <database>tinyblog</database>
+</config>
