@@ -20,7 +20,7 @@ class tb_db_mysql
             empty($this->passwd) || 
             empty($this->database))
         {
-            echo "Error: tb_db_mysql.__construct() necessary params is null.";
+            echo "Error: tb_db_mysql->__construct() necessary params is null.";
             exit;
         }
 
@@ -28,7 +28,7 @@ class tb_db_mysql
         $this->db_handler = mysqli_connect($this->host, $this->user, $this->passwd, $this->database);
         if (mysqli_connect_errno())
         {
-            echo "Error: tb_db_mysql.__construct() Could not connect the database, please try again later.";
+            echo "Error: tb_db_mysql->__construct() Could not connect the database, please try again later.";
             exit;
         }
 
@@ -88,7 +88,7 @@ class tb_db_mysql
     {
         if (empty($query ) || empty($this->db_handler))
         {
-            echo "Error: tb_db_mysql.do_sql_query() necessary params is null.";
+            echo "Error: tb_db_mysql->do_sql_query() necessary params is null.";
             exit;
         }
 
@@ -114,7 +114,7 @@ class tb_db
 {
     var $db_control;
 
-    function __construct($param)
+    function __construct()
     {
         $this->db_control = new tb_db_mysql();
  
@@ -130,7 +130,7 @@ class tb_db
     {
         if (empty($this->db_control) || empty($post_attr))
         {
-            echo "Error: tb_db.insert_tb_posts() necessary params is null.";
+            echo "Error: tb_db->insert_tb_posts() necessary params is null.";
             exit;
         }
 
@@ -165,7 +165,7 @@ class tb_db
     {
         if (empty($this->db_control) || empty($post_id))
         {
-            echo "Error: tb_db.get_tb_posts() necessary params is null.";
+            echo "Error: tb_db->get_tb_posts() necessary params is null.";
             exit;
         }
 
@@ -180,7 +180,7 @@ class tb_db
     {
         if (empty($this->db_control) || empty($post_id))
         {
-            echo "Error: tb_db.delete_tb_posts() necessary params is null.";
+            echo "Error: tb_db->delete_tb_posts() necessary params is null.";
             exit;
         }
 
@@ -195,7 +195,7 @@ class tb_db
     {
         if (empty($this->db_control) || empty($cat_attr))
         {
-            echo "Error: tb_db.insert_tb_categories() necessary params is null.";
+            echo "Error: tb_db->insert_tb_categories() necessary params is null.";
             exit;
         }
 
@@ -203,7 +203,7 @@ class tb_db
         extract($cat_attr);
 
         //if it is insert, category_id should be found, otherwise it is update
-        if (empty(category_id))
+        if (empty($category_id))
         {
             $query = "insert into tb_categories 
                 (category_id, category_name) 
@@ -222,11 +222,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_categories($post_id)
+    function get_tb_categories($category_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($category_id))
         {
-            echo "Error: tb_db.get_tb_categories() necessary params is null.";
+            echo "Error: tb_db->get_tb_categories() necessary params is null.";
             exit;
         }
 
@@ -237,11 +237,11 @@ class tb_db
         return $result;
     }
 
-    function delete_tb_categories($post_id)
+    function delete_tb_categories($category_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($category_id))
         {
-            echo "Error: tb_db.delete_tb_categories() necessary params is null.";
+            echo "Error: tb_db->delete_tb_categories() necessary params is null.";
             exit;
         }
 
@@ -254,9 +254,9 @@ class tb_db
 
     function insert_tb_comments($comment_attr)
     {
-        if (empty($this->db_control) || empty($cat_attr))
+        if (empty($this->db_control) || empty($comment_attr))
         {
-            echo "Error: tb_db.insert_tb_comments() necessary params is null.";
+            echo "Error: tb_db->insert_tb_comments() necessary params is null.";
             exit;
         }
 
@@ -284,11 +284,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_comments($post_id)
+    function get_tb_comments($comment_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($comment_id))
         {
-            echo "Error: tb_db.get_tb_comments() necessary params is null.";
+            echo "Error: tb_db->get_tb_comments() necessary params is null.";
             exit;
         }
 
@@ -299,11 +299,11 @@ class tb_db
         return $result;
     }
 
-    function delete_tb_comments($post_id)
+    function delete_tb_comments($comment_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($comment_id))
         {
-            echo "Error: tb_db.delete_tb_comments() necessary params is null.";
+            echo "Error: tb_db->delete_tb_comments() necessary params is null.";
             exit;
         }
 
@@ -316,9 +316,9 @@ class tb_db
 
     function insert_tb_links($link_attr)
     {
-        if (empty($this->db_control) || empty($cat_attr))
+        if (empty($this->db_control) || empty($link_attr))
         {
-            echo "Error: tb_db.insert_tb_links() necessary params is null.";
+            echo "Error: tb_db->insert_tb_links() necessary params is null.";
             exit;
         }
 
@@ -344,11 +344,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_links($post_id)
+    function get_tb_links($link_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($link_id))
         {
-            echo "Error: tb_db.get_tb_links() necessary params is null.";
+            echo "Error: tb_db->get_tb_links() necessary params is null.";
             exit;
         }
 
@@ -359,11 +359,11 @@ class tb_db
         return $result;
     }
 
-    function delete_tb_links($post_id)
+    function delete_tb_links($link_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($link_id))
         {
-            echo "Error: tb_db.delete_tb_links() necessary params is null.";
+            echo "Error: tb_db->delete_tb_links() necessary params is null.";
             exit;
         }
 
@@ -376,9 +376,9 @@ class tb_db
 
     function insert_tb_users($user_attr)
     {
-        if (empty($this->db_control) || empty($cat_attr))
+        if (empty($this->db_control) || empty($user_attr))
         {
-            echo "Error: tb_db.insert_tb_users() necessary params is null.";
+            echo "Error: tb_db->insert_tb_users() necessary params is null.";
             exit;
         }
 
@@ -406,11 +406,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_users($post_id)
+    function get_tb_users($user_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($user_id))
         {
-            echo "Error: tb_db.get_tb_users() necessary params is null.";
+            echo "Error: tb_db->get_tb_users() necessary params is null.";
             exit;
         }
 
@@ -421,11 +421,11 @@ class tb_db
         return $result;
     }
 
-    function delete_tb_users($post_id)
+    function delete_tb_users($user_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($user_id))
         {
-            echo "Error: tb_db.delete_tb_users() necessary params is null.";
+            echo "Error: tb_db->delete_tb_users() necessary params is null.";
             exit;
         }
 
@@ -438,9 +438,9 @@ class tb_db
 
     function insert_tb_options($option_attr)
     {
-        if (empty($this->db_control) || empty($cat_attr))
+        if (empty($this->db_control) || empty($option_attr))
         {
-            echo "Error: tb_db.insert_tb_options() necessary params is null.";
+            echo "Error: tb_db->insert_tb_options() necessary params is null.";
             exit;
         }
 
@@ -466,26 +466,26 @@ class tb_db
         return $result;
     }
 
-    function get_tb_options($post_id)
+    function get_tb_options($option_name)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($option_name))
         {
-            echo "Error: tb_db.get_tb_options() necessary params is null.";
+            echo "Error: tb_db->get_tb_options() necessary params is null.";
             exit;
         }
 
-        $query = "select * from tb_options where option_id='$option_id'";
+        $query = "select * from tb_options where option_name='$option_name'";
 
         $result = $this->db_control->do_sql_query($query);
 
         return $result;
     }
 
-    function delete_tb_options($post_id)
+    function delete_tb_options($option_id)
     {
-        if (empty($this->db_control) || empty($post_id))
+        if (empty($this->db_control) || empty($option_id))
         {
-            echo "Error: tb_db.delete_tb_options() necessary params is null.";
+            echo "Error: tb_db->delete_tb_options() necessary params is null.";
             exit;
         }
 
