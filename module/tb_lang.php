@@ -17,6 +17,7 @@ function get_language()
     if (!empty($result["num"]) && !empty($result["row"]) && $result["num"]==1)
     {
         $row = $result["row"];
+        //the column 2 is option_value
         $lang = $row[2];
     }
     else

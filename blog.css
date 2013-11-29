@@ -1,0 +1,170 @@
+/*
+    create by weiganyi on 20131128
+*/
+
+/* login.php style */
+#login_table
+{
+	background-color: #FFFFFF;  /* bai se */
+	color: #000000;             /* hei se */
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: black;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+}
+
+#login_tr, #login_tr1, #login_tr2
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: black;
+
+    height: 50px;
+}
+
+#login_tr1
+{
+	background-color: #A9A9A9;  /* an hui se */
+}
+
+#login_tr2
+{
+	background-color: #DCDCDC;  /* dan hui se */
+}
+
+#login_td_title
+{
+	background-color: #000000;  /* hei se */
+	color: #FFFFFF;             /* bai se */
+
+	text-align: center;
+	font-weight: bold;
+    font-size:200%;
+}
+
+#login_td_label
+{
+	text-align: right;
+    font-size:150%;
+
+    width: 200px;
+}
+
+#login_td_input
+{
+	text-align: left;
+
+    width: 250px;
+}
+
+#login_user_name_input, #login_user_passwd_input
+{
+    width: 200px;
+    height: 20px;
+}
+
+#login_td_submit
+{
+	text-align: center;
+}
+
+#login_submit_input
+{
+	font-weight: bold;
+    font-size:150%;
+}
+
+#login_td_register
+{
+	text-align: center;
+}
+
+/* register.php style */
+#reg_table
+{
+	background-color: #FFFFFF;  /* bai se */
+	color: #000000;             /* hei se */
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: black;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+}
+
+#reg_tr, #reg_tr1, #reg_tr2
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: black;
+
+    height: 50px;
+}
+
+#reg_tr1
+{
+	background-color: #A9A9A9;  /* an hui se */
+}
+
+#reg_tr2
+{
+	background-color: #DCDCDC;  /* dan hui se */
+}
+
+#reg_td_title
+{
+	background-color: #000000;  /* hei se */
+	color: #FFFFFF;             /* bai se */
+
+	text-align: center;
+	font-weight: bold;
+    font-size:200%;
+}
+
+#reg_td_label
+{
+	text-align: right;
+    font-size:150%;
+
+    width: 200px;
+}
+
+#reg_td_input
+{
+	text-align: left;
+
+    width: 250px;
+}
+
+#reg_user_name_input, #reg_user_passwd_input, #reg_user_mail_input
+{
+    width: 200px;
+    height: 20px;
+}
+
+#reg_td_submit
+{
+	text-align: center;
+}
+
+#reg_submit_input
+{
+	font-weight: bold;
+    font-size:150%;
+}
+
+#reg_td_login
+{
+	text-align: center;
+}
+

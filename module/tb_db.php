@@ -406,15 +406,15 @@ class tb_db
         return $result;
     }
 
-    function get_tb_users($user_id)
+    function get_tb_users($user_name)
     {
-        if (empty($this->db_control) || empty($user_id))
+        if (empty($this->db_control) || empty($user_name))
         {
             echo "Error: tb_db->get_tb_users() necessary params is null.";
             exit;
         }
 
-        $query = "select * from tb_users where user_id='$user_id'";
+        $query = "select * from tb_users where user_name='$user_name'";
 
         $result = $this->db_control->do_sql_query($query);
 
