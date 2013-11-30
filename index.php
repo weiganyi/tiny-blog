@@ -13,38 +13,48 @@ $lang = get_language();
 require_once(ROOTPATH . "lang/$lang.php");
 
 require_once(ROOTPATH . "module/tb_login.php");
+$g_login = new tb_login();
 
-//navigate to login.php
-$jump_to_login = false;
-//navigate to register.php
-$jump_to_register = false;
-
-login_init();
-if (has_page("login") == true)
+/* do login and register */
+$g_login->login_init();
+if ($g_login->has_page("login") == true)
 {
-    $jump_to_login = true;
+    $g_login->set_jump_to_login(true);
 }
-elseif (has_page("register") == true)
+elseif ($g_login->has_page("register") == true)
 {
-    $jump_to_register = true;
+    $g_login->set_jump_to_register(true);
 }
 else
 {
-    if (is_logining() == true)
+    if ($g_login->is_logining() == true)
     {
-        $result = do_login();
+        $result = $g_login->do_login();
         if ($result == false)
         {
-            $jump_to_login = true;
+            $g_login->set_jump_to_login(true);
         }
+    }
+    elseif ($g_login->is_registering() == true)
+    {
+        $result = $g_login->do_register();
+        if ($result == false)
+        {
+            $g_login->set_jump_to_register(true);
+        }
+    }
+    elseif ($g_login->is_logouting() == true)
+    {
+        $g_login->do_logout();
     }
 }
 
-if ($jump_to_login == true)
+/* display page */
+if ($g_login->is_jump_to_login() == true)
 {
     require_once(ROOTPATH . "login.php");
 }
-elseif ($jump_to_register == true)
+elseif ($g_login->is_jump_to_register() == true)
 {
     require_once(ROOTPATH . "register.php");
 }

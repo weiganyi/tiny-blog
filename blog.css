@@ -48,6 +48,12 @@
     font-size:200%;
 }
 
+#login_td_title_link
+{
+	text-decoration: none;
+	color: #FFFFFF;             /* bai se */
+}
+
 #login_td_label
 {
 	text-align: right;
@@ -78,6 +84,12 @@
 {
 	font-weight: bold;
     font-size:150%;
+}
+
+#login_td_notice
+{
+	text-align: center;
+	color: red;
 }
 
 #login_td_register
@@ -131,6 +143,12 @@
     font-size:200%;
 }
 
+#reg_td_title_link
+{
+	text-decoration: none;
+	color: #FFFFFF;             /* bai se */
+}
+
 #reg_td_label
 {
 	text-align: right;
@@ -146,7 +164,7 @@
     width: 250px;
 }
 
-#reg_user_name_input, #reg_user_passwd_input, #reg_user_mail_input
+#reg_user_name_input, #reg_user_passwd_input, #reg_user_email_input
 {
     width: 200px;
     height: 20px;
@@ -161,6 +179,12 @@
 {
 	font-weight: bold;
     font-size:150%;
+}
+
+#reg_td_notice
+{
+	text-align: center;
+	color: red;
 }
 
 #reg_td_login

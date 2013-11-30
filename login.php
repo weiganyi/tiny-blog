@@ -6,11 +6,13 @@
 	<link type="text/css" rel="stylesheet" href="blog.css"/>
 </head>
 <body>
-    <form method="post" id="login_form" name="login_form" action="index.php?action=\"login\"">
+    <form method="post" id="login_form" name="login_form" action="index.php?action=login">
         <table id="login_table">
             <tr id="login_tr" name="login_tr">
                 <td colspan=2 id="login_td_title" name="login_td_title">
-                    <?php echo $lang_text["blog_name"]." - ".$lang_text["login_page_title"]; ?>
+                    <a href="index.php" id="login_td_title_link" name="login_td_title_link">
+                        <?php echo $lang_text["blog_name"]; ?>
+                    </a>
                 </td>
             </tr>
             <tr id="login_tr1" name="login_tr1">
@@ -35,11 +37,39 @@
                 </td>
             </tr>
             <tr id="login_tr2" name="login_tr2">
+                <td colspan=2 id="login_td_notice" name="login_td_notice">
+                    <?php 
+                        $fail_notice = $g_login->get_fail_notice();
+                        if (!empty($fail_notice))
+                        {
+                            echo "<p>$fail_notice</p>";
+                        }
+                    ?>
+                </td>
+            </tr>
+            <tr id="login_tr1" name="login_tr1">
                 <td colspan=2 id="login_td_register" name="login_td_register">
-                    <a href="index.php?page=register"><?php echo $lang_text["goto_register"]; ?></a>
+                    <a href="index.php?page=register">
+                        <?php echo $lang_text["login_goto_register"]; ?>
+                    </a>
                 </td>
             </tr>
         </table>
     </form>
+    <script type="text/javascript">
+        var user_name_input = document.getElementsByName("login_user_name_input");
+        if (user_name_input == null)
+        {
+            var fail_notice = document.getElementsByName("login_td_notice");
+            fail_notice.innerText = "Notice: User Name is null"
+        }
+
+        var user_passwd_input = document.getElementsByName("login_user_passwd_input");
+        if (user_passwd_input == null)
+        {
+            var fail_notice = document.getElementsByName("login_td_notice");
+            fail_notice.innerText = "Notice: User Password is null"
+        }
+    </script>
 </body>
 </html>

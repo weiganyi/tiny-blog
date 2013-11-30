@@ -92,7 +92,7 @@ class tb_db_mysql
             exit;
         }
 
-        //do the sql statement query
+        //do the sql query
         $result = mysqli_query($this->db_handler, $query);
 
         //get the result
@@ -106,6 +106,20 @@ class tb_db_mysql
         mysqli_free_result($result);
 
         return $query_result;
+    }
+
+    function do_sql_query_without_result($query)
+    {
+        if (empty($query ) || empty($this->db_handler))
+        {
+            echo "Error: tb_db_mysql->do_sql_query_without_result() necessary params is null.";
+            exit;
+        }
+
+        //do the sql query
+        $result = mysqli_query($this->db_handler, $query);
+
+        return $result;
     }
 }
 
@@ -156,7 +170,7 @@ class tb_db
                 comment_number='$comment_number' where post_id='$post_id'";
         }
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -186,7 +200,7 @@ class tb_db
 
         $query = "delete from tb_posts where post_id='$post_id'";
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -217,7 +231,7 @@ class tb_db
                 where category_id='$category_id'";
         }
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -247,7 +261,7 @@ class tb_db
 
         $query = "delete from tb_categories where category_id='$category_id'";
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -279,7 +293,7 @@ class tb_db
                 where comment_id='$comment_id'";
         }
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -309,7 +323,7 @@ class tb_db
 
         $query = "delete from tb_comments where comment_id='$comment_id'";
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -339,7 +353,7 @@ class tb_db
                 link_name='$link_name', link_url='$link_url' where link_id='$link_id'";
         }
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -369,7 +383,7 @@ class tb_db
 
         $query = "delete from tb_links where link_id='$link_id'";
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -401,7 +415,7 @@ class tb_db
                 user_level='$user_level' where user_id='$user_id'";
         }
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -431,7 +445,7 @@ class tb_db
 
         $query = "delete from tb_users where user_id='$user_id'";
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -461,7 +475,7 @@ class tb_db
                 option_name='$option_name', option_value='$option_value' where option_id='$option_id'";
         }
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }
@@ -491,7 +505,7 @@ class tb_db
 
         $query = "delete from tb_options where option_id='$option_id'";
 
-        $result = $this->db_control->do_sql_query($query);
+        $result = $this->db_control->do_sql_query_without_result($query);
 
         return $result;
     }

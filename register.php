@@ -6,11 +6,13 @@
 	<link type="text/css" rel="stylesheet" href="blog.css"/>
 </head>
 <body>
-    <form method="post" id="reg_form" name="reg_form" action="index.php?action=\"register\"">
+    <form method="post" id="reg_form" name="reg_form" action="index.php?action=register">
         <table id="reg_table">
             <tr id="reg_tr" name="reg_tr">
                 <td colspan=2 id="reg_td_title" name="reg_td_title">
-                    <?php echo $lang_text["blog_name"]." - ".$lang_text["reg_page_title"]; ?>
+                    <a href="index.php" id="reg_td_title_link" name="reg_td_title_link">
+                        <?php echo $lang_text["blog_name"]; ?>
+                    </a>
                 </td>
             </tr>
             <tr id="reg_tr1" name="reg_tr1">
@@ -34,7 +36,7 @@
                     <?php echo $lang_text["reg_user_mail"].": "; ?>
                 </td>
                 <td id="reg_td_input" name="reg_td_input">
-                    <input type="text" id="reg_user_mail_input" name="reg_user_mail_input">
+                    <input type="text" id="reg_user_email_input" name="reg_user_email_input">
                 </td>
             </tr>
             <tr id="reg_tr2" name="reg_tr2">
@@ -43,12 +45,24 @@
                 </td>
             </tr>
             <tr id="reg_tr1" name="reg_tr1">
+                <td colspan=2 id="reg_td_notice" name="reg_td_notice">
+                    <?php 
+                        $fail_notice = $g_login->get_fail_notice();
+                        if (!empty($fail_notice))
+                        {
+                            echo "<p>$fail_notice</p>";
+                        }
+                    ?>
+                </td>
+            </tr>
+            <tr id="reg_tr2" name="reg_tr2">
                 <td colspan=2 id="reg_td_login" name="reg_td_login">
-                    <a href="index.php?page=login"><?php echo $lang_text["goto_login"]; ?></a>
+                    <a href="index.php?page=login">
+                        <?php echo $lang_text["reg_goto_login"]; ?>
+                    </a>
                 </td>
             </tr>
         </table>
     </form>
 </body>
 </html>
-
