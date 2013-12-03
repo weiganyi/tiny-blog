@@ -15,41 +15,12 @@ require_once(ROOTPATH . "lang/$lang.php");
 require_once(ROOTPATH . "module/tb_login.php");
 $g_login = new tb_login();
 
-/* do login and register */
 $g_login->login_init();
-if ($g_login->has_page("login") == true)
-{
-    $g_login->set_jump_to_login(true);
-}
-elseif ($g_login->has_page("register") == true)
-{
-    $g_login->set_jump_to_register(true);
-}
-else
-{
-    if ($g_login->is_logining() == true)
-    {
-        $result = $g_login->do_login();
-        if ($result == false)
-        {
-            $g_login->set_jump_to_login(true);
-        }
-    }
-    elseif ($g_login->is_registering() == true)
-    {
-        $result = $g_login->do_register();
-        if ($result == false)
-        {
-            $g_login->set_jump_to_register(true);
-        }
-    }
-    elseif ($g_login->is_logouting() == true)
-    {
-        $g_login->do_logout();
-    }
-}
 
-/* display page */
+//do login, register, logout
+$g_login->login_main();
+
+//display page
 if ($g_login->is_jump_to_login() == true)
 {
     require_once(ROOTPATH . "login.php");

@@ -12,18 +12,6 @@ class tb_login
     //the notice display after do_login() or do_register()
     var $fail_notice;
 
-    function set_jump_to_login($param)
-    {
-        $this->jump_to_login = $param;
-        return;
-    }
-
-    function set_jump_to_register($param)
-    {
-        $this->jump_to_register = $param;
-        return;
-    }
-
     function is_jump_to_login()
     {
         return $this->jump_to_login;
@@ -199,6 +187,40 @@ class tb_login
         return false;
     }
 
+    function login_main()
+    {
+        if ($this->has_page("login") == true)
+        {
+            $this->jump_to_login = true;
+        }
+        elseif ($this->has_page("register") == true)
+        {
+            $this->jump_to_register = true;
+        }
+        else
+        {
+            if ($this->is_logining() == true)
+            {
+                $result = $this->do_login();
+                if ($result == false)
+                {
+                    $this->jump_to_login = true;
+                }
+            }
+            elseif ($this->is_registering() == true)
+            {
+                $result = $this->do_register();
+                if ($result == false)
+                {
+                    $this->jump_to_register = true;
+                }
+            }
+            elseif ($this->is_logouting() == true)
+            {
+                $this->do_logout();
+            }
+        }
+    }
 }
 
 ?>

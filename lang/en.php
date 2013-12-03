@@ -13,6 +13,8 @@ $lang_text["login_user_name"] = "User Name";
 $lang_text["login_user_passwd"] = "User Password";
 $lang_text["login_submit"] = "Login";
 $lang_text["login_goto_register"] = "I want to register a new account!";
+$lang_text["login_user_null"] = "Notice: User Name is null.";
+$lang_text["login_passwd_null"] = "Notice: User Password is null.";
 
 /* register.php */
 $lang_text["reg_page_title"] = "Register";
@@ -21,6 +23,9 @@ $lang_text["reg_user_passwd"] = "User Password";
 $lang_text["reg_user_mail"] = "User Mail";
 $lang_text["reg_submit"] = "Register";
 $lang_text["reg_goto_login"] = "I have a account, login!";
+$lang_text["reg_user_null"] = "Notice: User Name is null.";
+$lang_text["reg_passwd_null"] = "Notice: User Password is null.";
+$lang_text["reg_email_null"] = "Notice: User Email is null.";
 
 /* tb_login.php */
 $lang_text["tb_login_passwd_incorrent"] = "Notice: the password is incorrect.";
