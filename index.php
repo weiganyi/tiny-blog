@@ -8,7 +8,7 @@ define('ROOTPATH', dirname(__FILE__).'/');
 require_once(ROOTPATH . "module/tb_db.php");
 $g_db = new tb_db();
 
-require_once(ROOTPATH . "module/tb_lang.php");
+require_once(ROOTPATH . "module/tb_facade.php");
 $lang = get_language();
 require_once(ROOTPATH . "lang/$lang.php");
 

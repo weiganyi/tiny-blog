@@ -18,7 +18,7 @@
     margin-top: 20%;
 }
 
-#login_tr, #login_tr1, #login_tr2
+#login_tr, .login_tr1, .login_tr2
 {
     border-collapse: collapse;
     border-style: dotted;
@@ -28,17 +28,17 @@
     height: 50px;
 }
 
-#login_tr1
+.login_tr1
 {
 	background-color: #A9A9A9;  /* an hui se */
 }
 
-#login_tr2
+.login_tr2
 {
 	background-color: #DCDCDC;  /* dan hui se */
 }
 
-#login_td_title
+#login_title_td
 {
 	background-color: #000000;  /* hei se */
 	color: #FFFFFF;             /* bai se */
@@ -48,13 +48,13 @@
     font-size:200%;
 }
 
-#login_td_title_link
+#login_title_a
 {
 	text-decoration: none;
 	color: #FFFFFF;             /* bai se */
 }
 
-#login_td_label
+.login_label_td
 {
 	text-align: right;
     font-size:150%;
@@ -62,7 +62,7 @@
     width: 200px;
 }
 
-#login_td_input
+.login_input_td
 {
 	text-align: left;
 
@@ -75,7 +75,7 @@
     height: 20px;
 }
 
-#login_td_submit
+#login_submit_td
 {
 	text-align: center;
 }
@@ -86,13 +86,13 @@
     font-size:150%;
 }
 
-#login_td_notice
+#login_notice_td
 {
 	text-align: center;
 	color: red;
 }
 
-#login_td_register
+#login_register_td
 {
 	text-align: center;
 }
@@ -113,7 +113,7 @@
     margin-top: 20%;
 }
 
-#reg_tr, #reg_tr1, #reg_tr2
+#reg_tr, .reg_tr1, .reg_tr2
 {
     border-collapse: collapse;
     border-style: dotted;
@@ -123,17 +123,17 @@
     height: 50px;
 }
 
-#reg_tr1
+.reg_tr1
 {
 	background-color: #A9A9A9;  /* an hui se */
 }
 
-#reg_tr2
+.reg_tr2
 {
 	background-color: #DCDCDC;  /* dan hui se */
 }
 
-#reg_td_title
+#reg_title_td
 {
 	background-color: #000000;  /* hei se */
 	color: #FFFFFF;             /* bai se */
@@ -143,13 +143,13 @@
     font-size:200%;
 }
 
-#reg_td_title_link
+#reg_title_a
 {
 	text-decoration: none;
 	color: #FFFFFF;             /* bai se */
 }
 
-#reg_td_label
+.reg_label_td
 {
 	text-align: right;
     font-size:150%;
@@ -157,7 +157,7 @@
     width: 200px;
 }
 
-#reg_td_input
+.reg_input_td
 {
 	text-align: left;
 
@@ -170,7 +170,7 @@
     height: 20px;
 }
 
-#reg_td_submit
+#reg_submit_td
 {
 	text-align: center;
 }
@@ -181,14 +181,189 @@
     font-size:150%;
 }
 
-#reg_td_notice
+#reg_notice_td
 {
 	text-align: center;
 	color: red;
 }
 
-#reg_td_login
+#reg_login_td
 {
 	text-align: center;
+}
+
+/* head.php style */
+#body_div                       /* jiao ning bu ju */
+{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#head_blog_title_p
+{
+	background-color: #FFFFFF;  /* bai se */
+	color: #000000;             /* hei se */
+
+	text-align: center;
+	font-weight: bold;
+    font-size:300%;
+
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+/* menu.php style */
+#menu_main_ul
+{
+	list-style-type: none;
+    font-size:120%;
+}
+
+#menu_main_ul li, #menu_submenu_ul li
+{
+	float: left;        /* force the menuitem float to left*/
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#menu_main_ul li a:link, #menu_submenu_ul li a:link
+{
+	color: black;
+	text-decoration: none;
+}
+
+#menu_main_ul li a:visited, #menu_submenu_ul li a:visited
+{
+	color: black;
+}
+
+#menu_main_ul li a:hover, #menu_submenu_ul li a:hover
+{
+	color: black;
+	text-decoration: underline;
+}
+
+#menu_main_ul li a:active, #menu_submenu_ul li a:active
+{
+	color: black;
+}
+
+#menu_submenu_ul
+{
+	display: none;
+	position: absolute;
+	z-index: 99;
+
+	list-style-type: none;
+}
+
+.menu_border
+{
+    clear: both;    /* force to seperate the following element */
+}
+
+#menu_login_ul
+{
+	list-style-type: none;
+}
+
+#menu_login_ul li
+{
+	float: right;        /* force the menuitem float to left*/
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#menu_login_ul li a:link
+{
+	color: black;
+	text-decoration: none;
+}
+
+#menu_login_ul li a:visited
+{
+	color: black;
+}
+
+#menu_login_ul li a:hover
+{
+	color: black;
+	text-decoration: underline;
+}
+
+#menu_login_ul li a:active
+{
+	color: black;
+}
+
+/* sidebar.php style */
+#sidebar_div
+{
+	float: left;
+	width: 25%;
+}
+
+#sidebar_notice_div, #sidebar_summary_div, #sidebar_category_div, 
+#sidebar_archive_div, #sidebar_reading_div, #sidebar_comment_div
+{
+    border-collapse: collapse;
+    border-style: solid;
+	border-width: 1px;
+	border-color: #808080;      /* hui se */
+
+	margin: 10px;
+}
+
+.sidebar_title
+{
+	background-color: #808080;  /* hui se */
+	margin: 0;
+
+	text-align: center;
+	font-weight: bold;
+    font-size: 120%;
+}
+
+.sidebar_content
+{
+	color: #4169E1;             /* huang jia lan se */
+	margin: 10px;
+}
+
+#sidebar_category_a:link
+{
+	color: #4169E1;             /* huang jia lan se */
+	text-decoration: none;
+}
+
+#sidebar_category_a:visited
+{
+	color: #4169E1;             /* huang jia lan se */
+}
+
+#sidebar_category_a:hover
+{
+	color: #4169E1;             /* huang jia lan se */
+	text-decoration: underline;
+}
+
+#sidebar_category_a:active
+{
+	color: #4169E1;             /* huang jia lan se */
+}
+
+/* post.php style */
+#content_div
+{
+	float: right;
+	width: 70%;
+
+    border-collapse: collapse;
+    border-style: solid;
+	border-width: 1px;
+	border-color: #808080;      /* hui se */
+
+	margin: 10px;
 }
 
