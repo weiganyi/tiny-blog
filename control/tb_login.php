@@ -35,7 +35,7 @@ class tb_login
         date_default_timezone_set("Asia/Hong_Kong");
     }
 
-    function check_logined()
+    function is_logined()
     {
         if (isset($_SESSION["valid_user"]))
         {
@@ -47,15 +47,58 @@ class tb_login
         }
     }
 
-    function has_page($page)
+    function is_admin_logined()
     {
-        if (isset($_REQUEST["page"]) && $_REQUEST["page"]==$page)
+        global $g_db;
+
+        if (empty($g_db))
         {
-            return true;
+            echo "Error: is_admin_logined() necessary params is null.";
+            exit;
+        }
+
+        if (isset($_SESSION["valid_user"]))
+        {
+            $logined_user = $_SESSION["valid_user"];
+
+            $result = $g_db->get_tb_users();
+            if (!empty($result["num"]) && !empty($result["rows"]))
+            {
+                $num = $result["num"];
+                $rows = $result["rows"];
+
+                for ($idx=0; $idx<$num; $idx++)
+                {
+                    $user = $rows[$idx];
+                    //the column 1 is user_name
+                    $user_name = $user[1];
+                    //the column 5 is user_level
+                    $user_level = $user[5];
+
+                    if ($user_level == "admin" && $user_name == $logined_user)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
         else
         {
             return false;
+        }
+    }
+
+    function get_logined_user()
+    {
+        if (isset($_SESSION["valid_user"]))
+        {
+            return $_SESSION["valid_user"];
+        }
+        else
+        {
+            return NULL;
         }
     }
 
@@ -77,7 +120,7 @@ class tb_login
     function do_login()
     {
         global $g_db;
-        global $lang_text;
+        global $g_lang_text;
 
         $user_name = $_REQUEST["login_user_name_input"];
         $user_password = $_REQUEST["login_user_passwd_input"];
@@ -103,12 +146,12 @@ class tb_login
             }
             else
             {
-                $this->fail_notice = $lang_text["tb_login_passwd_incorrent"];
+                $this->fail_notice = $g_lang_text["tb_login_passwd_incorrent"];
                 return false;
             }
         }
 
-        $this->fail_notice = $lang_text["tb_login_user_noexist"];
+        $this->fail_notice = $g_lang_text["tb_login_user_noexist"];
         return false;
     }
 
@@ -131,7 +174,7 @@ class tb_login
     function do_register()
     {
         global $g_db;
-        global $lang_text;
+        global $g_lang_text;
 
         $user_name = $_REQUEST["reg_user_name_input"];
         $user_password = $_REQUEST["reg_user_passwd_input"];
@@ -151,14 +194,14 @@ class tb_login
             $result = $g_db->insert_tb_users($user_array);
             if ($result == false)
             {
-                $this->fail_notice = $lang_text["tb_login_server_stop"];
+                $this->fail_notice = $g_lang_text["tb_login_server_stop"];
             }
 
             return $result;
         }
         else
         {
-            $this->fail_notice = $lang_text["tb_login_user_exist"];
+            $this->fail_notice = $g_lang_text["tb_login_user_exist"];
             return false;
         }
     }
@@ -189,11 +232,11 @@ class tb_login
 
     function login_main()
     {
-        if ($this->has_page("login") == true)
+        if (has_page("login") == true)
         {
             $this->jump_to_login = true;
         }
-        elseif ($this->has_page("register") == true)
+        elseif (has_page("register") == true)
         {
             $this->jump_to_register = true;
         }

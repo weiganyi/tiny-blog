@@ -200,7 +200,7 @@
     margin-right: auto;
 }
 
-#head_blog_title_p
+#head_div
 {
 	background-color: #FFFFFF;  /* bai se */
 	color: #000000;             /* hei se */
@@ -282,7 +282,7 @@
 	width: 25%;
 }
 
-.sidebar_title_div
+.sidebar_frame_div
 {
     border-collapse: collapse;
     border-style: solid;
@@ -292,7 +292,7 @@
 	margin: 10px;
 }
 
-.sidebar_title
+.sidebar_title_div
 {
 	background-color: #808080;  /* hui se */
 	margin: 0;
@@ -302,35 +302,40 @@
     font-size: 120%;
 }
 
-.sidebar_content
+.sidebar_content_div
 {
 	color: #4169E1;             /* huang jia lan se */
 	margin: 10px;
 }
 
-.sidebar_content a:link
+.sidebar_content_div a:link
 {
 	color: #4169E1;             /* huang jia lan se */
 	text-decoration: none;
 }
 
-.sidebar_content a:visited
+.sidebar_content_div a:visited
 {
 	color: #4169E1;             /* huang jia lan se */
 }
 
-.sidebar_content a:hover
+.sidebar_content_div a:hover
 {
 	color: #4169E1;             /* huang jia lan se */
 	text-decoration: underline;
 }
 
-.sidebar_content a:active
+.sidebar_content_div a:active
 {
 	color: #4169E1;             /* huang jia lan se */
 }
 
-#sidebar_comment
+.sidebar_content_right_span
+{
+    float: right;
+}
+
+#sidebar_comment_span
 {
 	color: #696969;             /* shen hui se */
 }
@@ -339,7 +344,7 @@
 #content_div
 {
 	float: right;
-	width: 70%;
+	width: 73%;
 
     border-collapse: collapse;
     border-style: solid;
@@ -347,5 +352,78 @@
 	border-color: #808080;      /* hui se */
 
 	margin: 10px;
+}
+
+.post_div
+{
+	padding: 5px;
+	margin: 1px;
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #DCDCDC;  /* dan hui se */
+}
+
+.post_div a
+{
+	color: black;             /* hei se */
+    font-size: 130%;
+}
+
+.post_div a:link
+{
+	color: black;             /* hei se */
+	text-decoration: none;
+}
+
+.post_div a:visited
+{
+	color: black;             /* hei se */
+}
+
+.post_div a:hover
+{
+	color: black;             /* hei se */
+	text-decoration: underline;
+}
+
+.post_div a:active
+{
+	color: black;             /* hei se */
+}
+
+.post_div_right
+{
+    float: right;
+    color: #696969;             /* shen hui se */
+}
+
+#page_num_div
+{
+	text-align: right;
+	color: #DCDCDC;             /* dan hui se */
+}
+
+#page_num_div a:link
+{
+	color: black;               /* hei se */
+	text-decoration: none;
+}
+
+#page_num_div a:visited
+{
+	color: black;               /* hei se */
+}
+
+#page_num_div a:hover
+{
+	color: black;               /* hei se */
+	text-decoration: underline;
+}
+
+#page_num_div a:active
+{
+	color: black;               /* hei se */
 }
 
