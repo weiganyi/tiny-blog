@@ -88,7 +88,7 @@ class tb_login
             return true;
         }
 
-        $result = $g_db->get_tb_user($user_name);
+        $result = $g_db->get_tb_user_by_name($user_name);
         if ($result["num"] == 1)
         {
             $rows = $result["rows"];
@@ -137,7 +137,7 @@ class tb_login
         $user_password = $_REQUEST["reg_user_passwd_input"];
         $user_email = $_REQUEST["reg_user_email_input"];
 
-        $result = $g_db->get_tb_user($user_name);
+        $result = $g_db->get_tb_user_by_name($user_name);
         if ($result["num"] == 0)
         {
             $user_registered = date("Y-m-d h:i:s");

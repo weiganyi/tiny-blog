@@ -92,6 +92,8 @@ class tb_db_mysql
             exit;
         }
 
+        $rows = array();
+
         //do the sql query
         $result = mysqli_query($this->db_handler, $query);
 
@@ -217,6 +219,21 @@ class tb_db
         }
 
         $query = "select count(post_id) from tb_posts where category_id='$category_id'";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_posts_order_by($field)
+    {
+        if (empty($this->db_control) || empty($field))
+        {
+            echo "Error: tb_db->get_tb_posts_order_by() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_posts order by $field desc";
 
         $result = $this->db_control->do_sql_query($query);
 
@@ -361,6 +378,21 @@ class tb_db
         return $result;
     }
 
+    function get_tb_comment_order_by($field)
+    {
+        if (empty($this->db_control) || empty($field))
+        {
+            echo "Error: tb_db->get_tb_comment_order_by() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_comments order by $field desc";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
     function delete_tb_comments($comment_id)
     {
         if (empty($this->db_control) || empty($comment_id))
@@ -468,11 +500,26 @@ class tb_db
         return $result;
     }
 
-    function get_tb_user($user_name)
+    function get_tb_user($user_id)
+    {
+        if (empty($this->db_control) || empty($user_id))
+        {
+            echo "Error: tb_db->get_tb_user() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_users where user_id='$user_id'";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_user_by_name($user_name)
     {
         if (empty($this->db_control) || empty($user_name))
         {
-            echo "Error: tb_db->get_tb_user() necessary params is null.";
+            echo "Error: tb_db->get_tb_user_by_name() necessary params is null.";
             exit;
         }
 

@@ -1,9 +1,9 @@
 <div id="sidebar_div">
-    <div id="sidebar_notice_div">
+    <div class="sidebar_title_div">
         <p class="sidebar_title"><?php echo $lang_text["sidebar_notice_title"]; ?></p>
         <p class="sidebar_content"><?php echo get_blog_notice(); ?></p>
     </div>
-    <div id="sidebar_summary_div">
+    <div class="sidebar_title_div">
         <p class="sidebar_title"><?php echo $lang_text["sidebar_summary_title"]; ?></p>
         <p class="sidebar_content">
             <?php
@@ -16,21 +16,21 @@
             ?>
         </p>
     </div>
-    <div id="sidebar_category_div">
+    <div class="sidebar_title_div">
         <p class="sidebar_title"><?php echo $lang_text["sidebar_category_title"]; ?></p>
         <p class="sidebar_content"><?php echo get_category_list(); ?></p>
     </div>
-    <div id="sidebar_archive_div">
+    <div class="sidebar_title_div">
         <p class="sidebar_title"><?php echo $lang_text["sidebar_archive_title"]; ?></p>
-        <p class="sidebar_content">sidebar_archive_div</p>
+        <p class="sidebar_content"><?php echo get_archive_list(); ?></p>
     </div>
-    <div id="sidebar_reading_div">
+    <div class="sidebar_title_div">
         <p class="sidebar_title"><?php echo $lang_text["sidebar_reading_title"]; ?></p>
-        <p class="sidebar_content">sidebar_reading_div</p>
+        <p class="sidebar_content"><?php echo get_reading_list(); ?></p>
     </div>
-    <div id="sidebar_comment_div">
+    <div class="sidebar_title_div">
         <p class="sidebar_title"><?php echo $lang_text["sidebar_commnet_title"]; ?></p>
-        <p class="sidebar_content">sidebar_comment_div</p>
+        <p class="sidebar_content"><?php echo get_comment_list(); ?></p>
     </div>
 </div>
 

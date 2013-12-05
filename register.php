@@ -21,7 +21,7 @@
                     <?php echo $lang_text["reg_user_name"].": "; ?>
                 </td>
                 <td class="reg_input_td">
-                    <input type="text" id="reg_user_name_input" name="reg_user_name_input">
+                    <input type="text" class="reg_input" name="reg_user_name_input">
                 </td>
             </tr>
             <tr class="reg_tr2">
@@ -29,7 +29,7 @@
                     <?php echo $lang_text["reg_user_passwd"].": "; ?>
                 </td>
                 <td class="reg_input_td">
-                    <input type="text" id="reg_user_passwd_input" name="reg_user_passwd_input">
+                    <input type="text" class="reg_input" name="reg_user_passwd_input">
                 </td>
             </tr>
             <tr class="reg_tr1">
@@ -37,7 +37,7 @@
                     <?php echo $lang_text["reg_user_mail"].": "; ?>
                 </td>
                 <td class="reg_input_td">
-                    <input type="text" id="reg_user_email_input" name="reg_user_email_input">
+                    <input type="text" class="reg_input" name="reg_user_email_input">
                 </td>
             </tr>
             <tr class="reg_tr2">

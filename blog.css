@@ -69,7 +69,7 @@
     width: 250px;
 }
 
-#login_user_name_input, #login_user_passwd_input
+.login_input
 {
     width: 200px;
     height: 20px;
@@ -164,7 +164,7 @@
     width: 250px;
 }
 
-#reg_user_name_input, #reg_user_passwd_input, #reg_user_email_input
+.reg_user_name_input
 {
     width: 200px;
     height: 20px;
@@ -227,24 +227,24 @@
 	margin-right: 10px;
 }
 
-#menu_main_ul li a:link, #menu_submenu_ul li a:link
+#menu_main_ul li a:link, #menu_submenu_ul li a:link, #menu_login_ul li a:link
 {
 	color: black;
 	text-decoration: none;
 }
 
-#menu_main_ul li a:visited, #menu_submenu_ul li a:visited
+#menu_main_ul li a:visited, #menu_submenu_ul li a:visited, #menu_login_ul li a:visited
 {
 	color: black;
 }
 
-#menu_main_ul li a:hover, #menu_submenu_ul li a:hover
+#menu_main_ul li a:hover, #menu_submenu_ul li a:hover, #menu_login_ul li a:hover
 {
 	color: black;
 	text-decoration: underline;
 }
 
-#menu_main_ul li a:active, #menu_submenu_ul li a:active
+#menu_main_ul li a:active, #menu_submenu_ul li a:active, #menu_login_ul li a:active
 {
 	color: black;
 }
@@ -275,28 +275,6 @@
 	margin-right: 5px;
 }
 
-#menu_login_ul li a:link
-{
-	color: black;
-	text-decoration: none;
-}
-
-#menu_login_ul li a:visited
-{
-	color: black;
-}
-
-#menu_login_ul li a:hover
-{
-	color: black;
-	text-decoration: underline;
-}
-
-#menu_login_ul li a:active
-{
-	color: black;
-}
-
 /* sidebar.php style */
 #sidebar_div
 {
@@ -304,8 +282,7 @@
 	width: 25%;
 }
 
-#sidebar_notice_div, #sidebar_summary_div, #sidebar_category_div, 
-#sidebar_archive_div, #sidebar_reading_div, #sidebar_comment_div
+.sidebar_title_div
 {
     border-collapse: collapse;
     border-style: solid;
@@ -331,26 +308,31 @@
 	margin: 10px;
 }
 
-#sidebar_category_a:link
+.sidebar_content a:link
 {
 	color: #4169E1;             /* huang jia lan se */
 	text-decoration: none;
 }
 
-#sidebar_category_a:visited
+.sidebar_content a:visited
 {
 	color: #4169E1;             /* huang jia lan se */
 }
 
-#sidebar_category_a:hover
+.sidebar_content a:hover
 {
 	color: #4169E1;             /* huang jia lan se */
 	text-decoration: underline;
 }
 
-#sidebar_category_a:active
+.sidebar_content a:active
 {
 	color: #4169E1;             /* huang jia lan se */
+}
+
+#sidebar_comment
+{
+	color: #696969;             /* shen hui se */
 }
 
 /* post.php style */

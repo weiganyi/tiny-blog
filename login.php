@@ -21,7 +21,7 @@
                     <?php echo $lang_text["login_user_name"].": "; ?>
                 </td>
                 <td class="login_input_td">
-                    <input type="text" id="login_user_name_input" name="login_user_name_input">
+                    <input type="text" class="login_input" name="login_user_name_input">
                 </td>
             </tr>
             <tr class="login_tr2">
@@ -29,7 +29,7 @@
                     <?php echo $lang_text["login_user_passwd"].": "; ?>
                 </td>
                 <td class="login_input_td">
-                    <input type="text" id="login_user_passwd_input" name="login_user_passwd_input">
+                    <input type="text" class="login_input" name="login_user_passwd_input">
                 </td>
             </tr>
             <tr class="login_tr1">
