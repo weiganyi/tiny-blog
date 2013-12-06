@@ -15,7 +15,7 @@ function get_blog_name()
 
     $name = "";
 
-    $result = $g_db->get_tb_option("blog_name");
+    $result = $g_db->get_tb_options_by_option_name("blog_name");
     if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $rows = $result["rows"];
@@ -161,7 +161,7 @@ function get_blog_notice()
 
     $notice = "";
 
-    $result = $g_db->get_tb_option("blog_notice");
+    $result = $g_db->get_tb_options_by_option_name("blog_notice");
     if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $rows = $result["rows"];
@@ -184,7 +184,7 @@ function get_bloger_name()
 
     $name = "";
 
-    $result = $g_db->get_tb_option("bloger_name");
+    $result = $g_db->get_tb_options_by_option_name("bloger_name");
     if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $rows = $result["rows"];
@@ -209,25 +209,17 @@ function get_user_registered()
 
     $user_registered = "";
 
-    $result = $g_db->get_tb_users();
-    if (!empty($result["num"]) && !empty($result["rows"]))
+    $result = $g_db->get_tb_users_by_user_level("admin");
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $num = $result["num"];
         $rows = $result["rows"];
 
-        for ($idx=0; $idx<$num; $idx++)
-        {
-            $user = $rows[$idx];
-            //the column 5 is user_level
-            if ($user[5] == "admin")
-            {
-                //the column 3 is user_registered
-                $user_registered = $user[3];
+        $user = $rows[0];
 
-                $user_registered = substr($user_registered, 0, 10);
-                break;
-            }
-        }
+        //the column 3 is user_registered
+        $user_registered = $user[3];
+        $user_registered = substr($user_registered, 0, 10);
     }
 
     $user_registered_html = "<span class='sidebar_content_right_span'>$user_registered</span>";
@@ -341,23 +333,16 @@ function get_user_email()
 
     $user_email = "";
 
-    $result = $g_db->get_tb_users();
-    if (!empty($result["num"]) && !empty($result["rows"]))
+    $result = $g_db->get_tb_users_by_user_level("admin");
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $num = $result["num"];
         $rows = $result["rows"];
 
-        for ($idx=0; $idx<$num; $idx++)
-        {
-            $user = $rows[$idx];
-            //the column 5 is user_level
-            if ($user[5] == "admin")
-            {
-                //the column 4 is user_email
-                $user_email = $user[4];
-                break;
-            }
-        }
+        $user = $rows[0];
+
+        //the column 4 is user_email
+        $user_email = $user[4];
     }
 
     $user_email_html = "<span class='sidebar_content_right_span'>$user_email</span>";
@@ -392,7 +377,7 @@ function get_category_list()
             $category_name = $category[1];
             if ($category_id)
             {
-                $result2 = $g_db->get_tb_posts_by_category($category_id);
+                $result2 = $g_db->get_tb_posts_num_by_cat_id($category_id);
                 if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
                 {
                     $rows2 = $result2["rows"];
@@ -422,7 +407,7 @@ function get_archive_list()
 
     $archive_list = "";
 
-    $result = $g_db->get_tb_posts_order_by("post_date");
+    $result = $g_db->get_tb_posts_by_order("post_date");
     if (!empty($result["num"]) && !empty($result["rows"]))
     {
         $num = $result["num"];
@@ -509,7 +494,7 @@ function get_reading_list()
 
     $reading_list = "";
 
-    $result = $g_db->get_tb_posts_order_by("read_number");
+    $result = $g_db->get_tb_posts_by_order("read_number");
     if (!empty($result["num"]) && !empty($result["rows"]))
     {
         $num = $result["num"];
@@ -554,7 +539,7 @@ function get_comment_list()
 
     $comment_list = "";
 
-    $result = $g_db->get_tb_comment_order_by("comment_date");
+    $result = $g_db->get_tb_comments_by_order("comment_date");
     if (!empty($result["num"]) && !empty($result["rows"]))
     {
         $num = $result["num"];
@@ -577,7 +562,7 @@ function get_comment_list()
             //the column 5 is comment_content
             $comment_content = $comment[5];
 
-            $result2 = $g_db->get_tb_post($post_id);
+            $result2 = $g_db->get_tb_posts_by_post_id($post_id);
             if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
             {
                 $num2 = $result2["num"];
@@ -587,7 +572,7 @@ function get_comment_list()
                 //the column 5 is post_title
                 $post_title = $post[5];
 
-                $result3 = $g_db->get_tb_user($user_id);
+                $result3 = $g_db->get_tb_users_by_user_id($user_id);
                 if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
                 {
                     $num3 = $result3["num"];
@@ -616,6 +601,12 @@ function get_comment_list()
 
 function has_page($page)
 {
+    if (empty($page))
+    {
+        echo "Error: has_page() necessary params is null.";
+        exit;
+    }
+
     if (isset($_REQUEST["page"]) && $_REQUEST["page"]==$page)
     {
         return true;
@@ -638,20 +629,13 @@ function get_page()
     }
 }
 
-function get_posts_list()
+function tb_options_page_posts()
 {
     global $g_db;
-    global $g_lang_text;
-
-    if (empty($g_db) || empty($g_lang_text))
-    {
-        echo "Error: get_posts_list() necessary params is null.";
-        exit;
-    }
 
     $page_posts = 15;
 
-    $result = $g_db->get_tb_option("page_posts");
+    $result = $g_db->get_tb_options_by_option_name("page_posts");
     if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $rows = $result["rows"];
@@ -659,13 +643,146 @@ function get_posts_list()
         $page_posts = $rows[0][2];
     }
 
+    return $page_posts;
+}
+
+function do_post_delete($post_id)
+{
+    global $g_db;
+
+    if (empty($post_id) || empty($g_db))
+    {
+        echo "Error: do_post_delete() necessary params is null.";
+        exit;
+    }
+
+    //delete the post
+    $g_db->delete_tb_posts($post_id);
+
+    //delete the comment belong to this post
+    $g_db->delete_tb_comments_by_post_id($post_id);
+
+    return;
+}
+
+function get_posts_by_param()
+{
+    global $g_db;
+    global $g_login;
+
+    //search by category name
+    if (isset($_REQUEST["cat"]))
+    {
+        $cat_name = $_REQUEST["cat"];
+        $result = $g_db->get_tb_categories_by_cat_name($cat_name);
+        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+        {
+            $rows = $result["rows"];
+            $category = $rows[0];
+            //the column 0 is category_id
+            $category_id = $category[0];
+
+            $result = $g_db->get_tb_posts_by_cat_id($category_id);
+            if (!empty($result["num"]) && !empty($result["rows"]))
+            {
+                return $result;
+            }
+        }
+    }
+    //search by archive date
+    elseif (isset($_REQUEST["archive"]))
+    {
+        $archive_date = $_REQUEST["archive"];
+        $archive_year = substr($archive_date, 0, 4);
+        $archive_month = substr($archive_date, 5, 2);
+
+        $result = $g_db->get_tb_posts();
+        if (!empty($result["num"]) && !empty($result["rows"]))
+        {
+            $num = $result["num"];
+            $rows = $result["rows"];
+
+            $row2 = array();
+            $idx2 = 0;
+
+            for ($idx=0; $idx<$num; $idx++)
+            {
+                $post = $rows[$idx];
+
+                //the column 3 is post_date
+                $post_date = $post[3];
+                $post_year = substr($post_date, 0, 4);
+                $post_month = substr($post_date, 5, 2);
+
+                if ($post_year == $archive_year)
+                {
+                    if ($archive_month && $archive_month == $post_month)
+                    {
+                        //exactly match
+                        $row2[$idx2] = $post;
+                        $idx2 = $idx2 + 1;
+                    }
+                }
+            }
+
+            $result2["num"] = $idx2;
+            $result2["rows"] = $row2;
+            return $result2;
+        }
+    }
+    //delete the post
+    elseif (isset($_REQUEST["id"]) && isset($_REQUEST["action"]))
+    {
+        if ($_REQUEST["action"]=="delete")
+        {
+            $post_id = $_REQUEST["id"];
+
+            do_post_delete($post_id);
+        }
+
+        $result = $g_db->get_tb_posts_by_order("post_date");
+        if (!empty($result["num"]) && !empty($result["rows"]))
+        {
+            return $result;
+        }
+    }
+    else
+    {
+        $result = $g_db->get_tb_posts_by_order("post_date");
+        if (!empty($result["num"]) && !empty($result["rows"]))
+        {
+            return $result;
+        }
+    }
+
+    return array();;
+}
+
+function get_posts_list()
+{
+    global $g_lang_text;
+    global $g_login;
+    global $g_cache;
+    global $g_db;
+
+    if (empty($g_cache) || empty($g_lang_text) || empty($g_login) || empty($g_db))
+    {
+        echo "Error: get_posts_list() necessary params is null.";
+        exit;
+    }
+
+    $page_posts = $g_cache->get_cache("tb_options_page_posts", "tb_options_page_posts");
+
     $post_list = "";
 
-    $result = $g_db->get_tb_posts_order_by("post_date");
-    if (!empty($result["num"]) && !empty($result["rows"]))
+    $result = get_posts_by_param();
+    if (!empty($result["num"]) && !empty($result["rows"]) && !empty($page_posts))
     {
         $num = $result["num"];
         $rows = $result["rows"];
+
+        //store the number of posts
+        $g_cache->set_cache("post_list_num", $num);
 
         //calculate the start of the post number that should be displayed
         $start = 0;
@@ -698,20 +815,63 @@ function get_posts_list()
             //the column 8 is comment_number
             $comment_number = $post[8];
 
-            $result2 = $g_db->get_tb_user($user_id);
+            $result2 = $g_db->get_tb_users_by_user_id($user_id);
             if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
             {
                 $num2 = $result2["num"];
                 $rows2 = $result2["rows"];
-                $user = $rows2[0];
+                $user2 = $rows2[0];
 
                 //the column 1 is user_name
-                $user_name = $user[1];
+                $user_name = $user2[1];
+
+                //if the logined user is the user of this post, or is the admin
+                //it should add edit or delete link for this post
+                $can_edit = false;
+                $logined_user = $g_login->get_logined_user();
+                if (!empty($logined_user))
+                {
+                    $result3 = $g_db->get_tb_users_by_user_name($logined_user);
+                    if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
+                    {
+                        $num3 = $result3["num"];
+                        $rows3 = $result3["rows"];
+                        $user3 = $rows3[0];
+
+                        //the column 5 is user_level
+                        $user_level = $user3[5];
+
+                        if ($logined_user==$user_name || $user_level=='admin')
+                        {
+                            $can_edit = true;
+                        }
+                    }
+                }
 
                 $post_list = $post_list . 
                     "<div class='post_div'>" . 
-                    "<a href='index.php?post=$post_id'>$post_title</a>" .
-                    "<span class='post_div_right'>$post_date $user_name " . $g_lang_text["post_read"]. "($read_number) " . $g_lang_text["post_comment"]. "($comment_number)</span>" . 
+                    "<div class='post_div_left'><a href='index.php?page=post&id=$post_id'>$post_title</a></div>";
+
+                if ($can_edit == true)
+                {
+                    $post_list = $post_list . 
+                        "<div class='post_div_right'>$post_date $user_name " . 
+                        $g_lang_text["post_read"]. "($read_number) " . 
+                        $g_lang_text["post_comment"]. "($comment_number) " . 
+                        "<a href='index.php?page=new_post&id=$post_id&action=edit'>" . $g_lang_text["post_edit"] . " </a>" . 
+                        "<a href='index.php?id=$post_id&action=delete'>" . $g_lang_text["post_delete"] . " </a>" . 
+                        "</div>";
+                }
+                else
+                {
+                    $post_list = $post_list . 
+                        "<div class='post_div_right'>$post_date $user_name " . 
+                        $g_lang_text["post_read"]. "($read_number) " . 
+                        $g_lang_text["post_comment"]. "($comment_number)" . 
+                        "</div>";
+                }
+
+                $post_list = $post_list . 
                     "</div>";
             }
         }
@@ -720,35 +880,24 @@ function get_posts_list()
     return $post_list;
 }
 
-function get_page_jump()
+function get_page_link()
 {
-    global $g_db;
+    global $g_cache;
     global $g_lang_text;
 
-    if (empty($g_db) || empty($g_lang_text))
+    if (empty($g_lang_text))
     {
-        echo "Error: get_page_jump() necessary params is null.";
+        echo "Error: get_page_link() necessary params is null.";
         exit;
     }
 
-    $page_posts = 20;
+    $page_posts = $g_cache->get_cache("tb_options_page_posts", "tb_options_page_posts");
 
-    $result = $g_db->get_tb_option("page_posts");
-    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    $page_link_html = "";
+
+    $num = $g_cache->get_cache("post_list_num", NULL);
+    if (!empty($num) && !empty($page_posts))
     {
-        $rows = $result["rows"];
-        //the column 2 is option_value
-        $page_posts = (int)$rows[0][2];
-    }
-
-    $page_jump_html = "";
-
-    $result = $g_db->get_tb_posts_order_by("post_date");
-    if (!empty($result["num"]) && !empty($result["rows"]))
-    {
-        $num = $result["num"];
-        $rows = $result["rows"];
-
         $page_curr = 1;
         if (isset($_REQUEST["pn"]))
         {
@@ -766,7 +915,7 @@ function get_page_jump()
 
         if ($page_num > 1)
         {
-            $page_jump_html = $page_jump_html . 
+            $page_link_html = $page_link_html . 
                 "<div id='page_num_div'>" . 
                 "<a href='index.php?pn=1'><< </a>";
 
@@ -786,25 +935,26 @@ function get_page_jump()
 
             for ($idx=$start; $idx<=$end; $idx++)
             {
+                //current page should not be displayed as a link
                 if ($page_curr == $idx)
                 {
-                    $page_jump_html = $page_jump_html . 
+                    $page_link_html = $page_link_html . 
                         "$idx ";
                 }
                 else
                 {
-                    $page_jump_html = $page_jump_html . 
+                    $page_link_html = $page_link_html . 
                         "<a href='index.php?pn=$idx'>$idx </a>";
                 }
             }
 
-            $page_jump_html = $page_jump_html . 
+            $page_link_html = $page_link_html . 
                 "<a href='index.php?pn=$page_num'>>></a>" . 
                 "</div>";
         }
     }
 
-    return $page_jump_html;
+    return $page_link_html;
 }
 
 ?>

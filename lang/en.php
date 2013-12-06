@@ -60,5 +60,7 @@ $g_lang_text["sidebar_summary_email"] = "Email: ";
 /* tb_function.php */
 $g_lang_text["post_read"] = "R";
 $g_lang_text["post_comment"] = "C";
+$g_lang_text["post_edit"] = "Edit";
+$g_lang_text["post_delete"] = "Delete";
 
 ?>

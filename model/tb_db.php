@@ -180,11 +180,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_post($post_id)
+    function get_tb_posts_by_post_id($post_id)
     {
         if (empty($this->db_control) || empty($post_id))
         {
-            echo "Error: tb_db->get_tb_post() necessary params is null.";
+            echo "Error: tb_db->get_tb_posts_by_post_id() necessary params is null.";
             exit;
         }
 
@@ -210,11 +210,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_posts_by_category($category_id)
+    function get_tb_posts_num_by_cat_id($category_id)
     {
         if (empty($this->db_control) || empty($category_id))
         {
-            echo "Error: tb_db->get_tb_posts_by_category() necessary params is null.";
+            echo "Error: tb_db->get_tb_posts_num_by_cat_id() necessary params is null.";
             exit;
         }
 
@@ -225,11 +225,26 @@ class tb_db
         return $result;
     }
 
-    function get_tb_posts_order_by($field)
+    function get_tb_posts_by_cat_id($category_id)
+    {
+        if (empty($this->db_control) || empty($category_id))
+        {
+            echo "Error: tb_db->get_tb_posts_by_cat_id() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_posts where category_id='$category_id'";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_posts_by_order($field)
     {
         if (empty($this->db_control) || empty($field))
         {
-            echo "Error: tb_db->get_tb_posts_order_by() necessary params is null.";
+            echo "Error: tb_db->get_tb_posts_by_order() necessary params is null.";
             exit;
         }
 
@@ -286,21 +301,6 @@ class tb_db
         return $result;
     }
 
-    function get_tb_category($category_id)
-    {
-        if (empty($this->db_control) || empty($category_id))
-        {
-            echo "Error: tb_db->get_tb_category() necessary params is null.";
-            exit;
-        }
-
-        $query = "select * from tb_categories where category_id='$category_id'";
-
-        $result = $this->db_control->do_sql_query($query);
-
-        return $result;
-    }
-
     function get_tb_categories()
     {
         if (empty($this->db_control))
@@ -310,6 +310,21 @@ class tb_db
         }
 
         $query = "select * from tb_categories";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_categories_by_cat_name($category_name)
+    {
+        if (empty($this->db_control) || empty($category_name))
+        {
+            echo "Error: tb_db->get_tb_categories_by_cat_name() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_categories where category_name='$category_name'";
 
         $result = $this->db_control->do_sql_query($query);
 
@@ -363,26 +378,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_comment($comment_id)
-    {
-        if (empty($this->db_control) || empty($comment_id))
-        {
-            echo "Error: tb_db->get_tb_comment() necessary params is null.";
-            exit;
-        }
-
-        $query = "select * from tb_comments where comment_id='$comment_id'";
-
-        $result = $this->db_control->do_sql_query($query);
-
-        return $result;
-    }
-
-    function get_tb_comment_order_by($field)
+    function get_tb_comments_by_order($field)
     {
         if (empty($this->db_control) || empty($field))
         {
-            echo "Error: tb_db->get_tb_comment_order_by() necessary params is null.";
+            echo "Error: tb_db->get_tb_comments_by_order() necessary params is null.";
             exit;
         }
 
@@ -402,6 +402,21 @@ class tb_db
         }
 
         $query = "delete from tb_comments where comment_id='$comment_id'";
+
+        $result = $this->db_control->do_sql_query_without_result($query);
+
+        return $result;
+    }
+
+    function delete_tb_comments_by_post_id($post_id)
+    {
+        if (empty($this->db_control) || empty($post_id))
+        {
+            echo "Error: tb_db->delete_tb_comments_by_post_id() necessary params is null.";
+            exit;
+        }
+
+        $query = "delete from tb_comments where post_id='$post_id'";
 
         $result = $this->db_control->do_sql_query_without_result($query);
 
@@ -438,15 +453,15 @@ class tb_db
         return $result;
     }
 
-    function get_tb_link($link_id)
+    function get_tb_links()
     {
-        if (empty($this->db_control) || empty($link_id))
+        if (empty($this->db_control))
         {
-            echo "Error: tb_db->get_tb_link() necessary params is null.";
+            echo "Error: tb_db->get_tb_links() necessary params is null.";
             exit;
         }
 
-        $query = "select * from tb_links where link_id='$link_id'";
+        $query = "select * from tb_links";
 
         $result = $this->db_control->do_sql_query($query);
 
@@ -500,11 +515,26 @@ class tb_db
         return $result;
     }
 
-    function get_tb_user($user_id)
+    function get_tb_users_by_user_level($user_level)
+    {
+        if (empty($this->db_control) || empty($user_level))
+        {
+            echo "Error: tb_db->get_tb_users_by_user_level() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_users where user_level='$user_level'";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_users_by_user_id($user_id)
     {
         if (empty($this->db_control) || empty($user_id))
         {
-            echo "Error: tb_db->get_tb_user() necessary params is null.";
+            echo "Error: tb_db->get_tb_users_by_user_id() necessary params is null.";
             exit;
         }
 
@@ -515,30 +545,15 @@ class tb_db
         return $result;
     }
 
-    function get_tb_user_by_name($user_name)
+    function get_tb_users_by_user_name($user_name)
     {
         if (empty($this->db_control) || empty($user_name))
         {
-            echo "Error: tb_db->get_tb_user_by_name() necessary params is null.";
+            echo "Error: tb_db->get_tb_users_by_user_name() necessary params is null.";
             exit;
         }
 
         $query = "select * from tb_users where user_name='$user_name'";
-
-        $result = $this->db_control->do_sql_query($query);
-
-        return $result;
-    }
-
-    function get_tb_users()
-    {
-        if (empty($this->db_control))
-        {
-            echo "Error: tb_db->get_tb_users() necessary params is null.";
-            exit;
-        }
-
-        $query = "select * from tb_users";
 
         $result = $this->db_control->do_sql_query($query);
 
@@ -590,11 +605,11 @@ class tb_db
         return $result;
     }
 
-    function get_tb_option($option_name)
+    function get_tb_options_by_option_name($option_name)
     {
         if (empty($this->db_control) || empty($option_name))
         {
-            echo "Error: tb_db->get_tb_option() necessary params is null.";
+            echo "Error: tb_db->get_tb_options_by_option_name() necessary params is null.";
             exit;
         }
 

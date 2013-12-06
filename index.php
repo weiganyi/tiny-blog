@@ -5,18 +5,24 @@
 
 define('ROOTPATH', dirname(__FILE__).'/');
 
+//include model file
 require_once(ROOTPATH . "model/tb_db.php");
 $g_db = new tb_db();
 
+//include control file
 require_once(ROOTPATH . "control/tb_lang.php");
-$lang = get_language();
-require_once(ROOTPATH . "lang/$lang.php");
+$g_lang = get_language();
+require_once(ROOTPATH . "lang/$g_lang.php");
 
 require_once(ROOTPATH . "control/tb_login.php");
 $g_login = new tb_login();
 
+require_once(ROOTPATH . "control/tb_cache.php");
+$g_cache = new tb_cache();
+
 require_once(ROOTPATH . "control/tb_function.php");
 
+//session init
 $g_login->login_init();
 //do login, register, logout
 $g_login->login_main();
@@ -43,7 +49,7 @@ else
     }
     else
     {
-        require_once(ROOTPATH . "post.php");
+        require_once(ROOTPATH . "post_list.php");
     }
 
     require_once(ROOTPATH . "foot.php");

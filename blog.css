@@ -365,38 +365,58 @@
 	border-color: #DCDCDC;  /* dan hui se */
 }
 
-.post_div a
-{
-	color: black;             /* hei se */
-    font-size: 130%;
-}
-
-.post_div a:link
+.post_div_left a:link
 {
 	color: black;             /* hei se */
 	text-decoration: none;
+    font-size: 120%;
 }
 
-.post_div a:visited
+.post_div_left a:visited
 {
 	color: black;             /* hei se */
+    font-size: 120%;
 }
 
-.post_div a:hover
+.post_div_left a:hover
 {
 	color: black;             /* hei se */
 	text-decoration: underline;
+    font-size: 120%;
 }
 
-.post_div a:active
+.post_div_left a:active
 {
 	color: black;             /* hei se */
+    font-size: 120%;
 }
 
 .post_div_right
 {
-    float: right;
+    text-align: right;
     color: #696969;             /* shen hui se */
+}
+
+.post_div_right a:link
+{
+	color: #696969;             /* shen hui se */
+	text-decoration: none;
+}
+
+.post_div_right a:visited
+{
+	color: #696969;             /* shen hui se */
+}
+
+.post_div_right a:hover
+{
+	color: #696969;             /* shen hui se */
+	text-decoration: underline;
+}
+
+.post_div_right a:active
+{
+	color: #696969;             /* shen hui se */
 }
 
 #page_num_div

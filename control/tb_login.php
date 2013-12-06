@@ -61,24 +61,20 @@ class tb_login
         {
             $logined_user = $_SESSION["valid_user"];
 
-            $result = $g_db->get_tb_users();
-            if (!empty($result["num"]) && !empty($result["rows"]))
+            $result = $g_db->get_tb_users_by_user_level("admin");
+            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
             {
                 $num = $result["num"];
                 $rows = $result["rows"];
 
-                for ($idx=0; $idx<$num; $idx++)
-                {
-                    $user = $rows[$idx];
-                    //the column 1 is user_name
-                    $user_name = $user[1];
-                    //the column 5 is user_level
-                    $user_level = $user[5];
+                $user = $rows[0];
 
-                    if ($user_level == "admin" && $user_name == $logined_user)
-                    {
-                        return true;
-                    }
+                //the column 1 is user_name
+                $user_name = $user[1];
+
+                if ($user_name == $logined_user)
+                {
+                    return true;
                 }
             }
 
@@ -131,7 +127,7 @@ class tb_login
             return true;
         }
 
-        $result = $g_db->get_tb_user_by_name($user_name);
+        $result = $g_db->get_tb_users_by_user_name($user_name);
         if ($result["num"] == 1)
         {
             $rows = $result["rows"];
@@ -180,7 +176,7 @@ class tb_login
         $user_password = $_REQUEST["reg_user_passwd_input"];
         $user_email = $_REQUEST["reg_user_email_input"];
 
-        $result = $g_db->get_tb_user_by_name($user_name);
+        $result = $g_db->get_tb_users_by_user_name($user_name);
         if ($result["num"] == 0)
         {
             $user_registered = date("Y-m-d h:i:s");

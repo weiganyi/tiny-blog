@@ -15,7 +15,7 @@ function get_language()
 
     $lang = "en";
 
-    $result = $g_db->get_tb_option("language");
+    $result = $g_db->get_tb_options_by_option_name("language");
     if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
         $rows = $result["rows"];
