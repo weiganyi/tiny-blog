@@ -26,14 +26,14 @@ function get_blog_name()
     return $name;
 }
 
-function get_new_post_menu()
+function make_new_post_menu()
 {
     global $g_login;
     global $g_lang_text;
 
     if (empty($g_login) || empty($g_lang_text))
     {
-        echo "Error: get_new_post_menu() necessary params is null.";
+        echo "Error: make_new_post_menu() necessary params is null.";
         exit;
     }
 
@@ -53,14 +53,14 @@ function get_new_post_menu()
     return $menu_html;
 }
 
-function get_management_menu()
+function make_management_menu()
 {
     global $g_login;
     global $g_lang_text;
 
     if (empty($g_login) || empty($g_lang_text))
     {
-        echo "Error: get_management_menu() necessary params is null.";
+        echo "Error: make_management_menu() necessary params is null.";
         exit;
     }
 
@@ -111,14 +111,14 @@ function get_management_menu()
     return $menu_html;
 }
 
-function get_system_menu()
+function make_system_menu()
 {
     global $g_login;
     global $g_lang_text;
 
     if (empty($g_login) || empty($g_lang_text))
     {
-        echo "Error: get_system_menu() necessary params is null.";
+        echo "Error: make_system_menu() necessary params is null.";
         exit;
     }
 
@@ -350,13 +350,13 @@ function get_user_email()
     return $user_email_html;
 }
 
-function get_category_list()
+function make_category_list()
 {
     global $g_db;
 
     if (empty($g_db))
     {
-        echo "Error: get_category_list() necessary params is null.";
+        echo "Error: make_category_list() necessary params is null.";
         exit;
     }
 
@@ -395,13 +395,13 @@ function get_category_list()
     return $category_list;
 }
 
-function get_archive_list()
+function make_archive_list()
 {
     global $g_db;
 
     if (empty($g_db))
     {
-        echo "Error: get_archive_list() necessary params is null.";
+        echo "Error: make_archive_list() necessary params is null.";
         exit;
     }
 
@@ -482,13 +482,13 @@ function get_archive_list()
     return $archive_list;
 }
 
-function get_reading_list()
+function make_reading_list()
 {
     global $g_db;
 
     if (empty($g_db))
     {
-        echo "Error: get_reading_list() necessary params is null.";
+        echo "Error: make_reading_list() necessary params is null.";
         exit;
     }
 
@@ -527,13 +527,13 @@ function get_reading_list()
     return $reading_list;
 }
 
-function get_comment_list()
+function make_comment_list()
 {
     global $g_db;
 
     if (empty($g_db))
     {
-        echo "Error: get_comment_list() necessary params is null.";
+        echo "Error: make_comment_list() necessary params is null.";
         exit;
     }
 
@@ -629,7 +629,7 @@ function get_page()
     }
 }
 
-function tb_options_page_posts()
+function get_page_posts()
 {
     global $g_db;
 
@@ -758,7 +758,64 @@ function get_posts_by_param()
     return array();;
 }
 
-function get_posts_list()
+function make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id)
+{
+    global $g_lang_text;
+    global $g_login;
+    global $g_db;
+
+    if (empty($g_lang_text) || empty($g_login) || empty($g_db))
+    {
+        echo "Error: make_post_info() necessary params is null.";
+        exit;
+    }
+
+    $post_list = "";
+
+    //if the logined user is the user of this post, or is the admin
+    //it should add edit or delete link for this post
+    $can_edit = false;
+    $logined_user = $g_login->get_logined_user();
+    if (!empty($logined_user))
+    {
+        $result = $g_db->get_tb_users_by_user_name($logined_user);
+        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+        {
+            $num = $result["num"];
+            $rows = $result["rows"];
+            $user = $rows[0];
+
+            //the column 5 is user_level
+            $user_level = $user[5];
+
+            if ($logined_user==$user_name || $user_level=='admin')
+            {
+                $can_edit = true;
+            }
+        }
+    }
+
+    if ($can_edit == true)
+    {
+        $post_list = $post_list . 
+            "$post_date $user_name " . 
+            $g_lang_text["post_read"]. "($read_number) " . 
+            $g_lang_text["post_comment"]. "($comment_number) " . 
+            "<a href='index.php?page=new_post&id=$post_id&action=edit'>" . $g_lang_text["post_edit"] . " </a>" . 
+            "<a href='index.php?id=$post_id&action=delete'>" . $g_lang_text["post_delete"] . " </a>";
+    }
+    else
+    {
+        $post_list = $post_list . 
+            "$post_date $user_name " . 
+            $g_lang_text["post_read"]. "($read_number) " . 
+            $g_lang_text["post_comment"]. "($comment_number)";
+    }
+
+    return $post_list;
+}
+
+function make_post_list()
 {
     global $g_lang_text;
     global $g_login;
@@ -767,11 +824,11 @@ function get_posts_list()
 
     if (empty($g_cache) || empty($g_lang_text) || empty($g_login) || empty($g_db))
     {
-        echo "Error: get_posts_list() necessary params is null.";
+        echo "Error: make_post_list() necessary params is null.";
         exit;
     }
 
-    $page_posts = $g_cache->get_cache("tb_options_page_posts", "tb_options_page_posts");
+    $page_posts = $g_cache->get_cache("tb_options_page_posts", "get_page_posts");
 
     $post_list = "";
 
@@ -825,53 +882,17 @@ function get_posts_list()
                 //the column 1 is user_name
                 $user_name = $user2[1];
 
-                //if the logined user is the user of this post, or is the admin
-                //it should add edit or delete link for this post
-                $can_edit = false;
-                $logined_user = $g_login->get_logined_user();
-                if (!empty($logined_user))
-                {
-                    $result3 = $g_db->get_tb_users_by_user_name($logined_user);
-                    if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
-                    {
-                        $num3 = $result3["num"];
-                        $rows3 = $result3["rows"];
-                        $user3 = $rows3[0];
+                $post_list = $post_list . 
+                    "<div class='post_list_div'>" . 
+                    "<div class='post_list_div_left'><a href='index.php?page=post&id=$post_id'>$post_title</a></div>";
 
-                        //the column 5 is user_level
-                        $user_level = $user3[5];
-
-                        if ($logined_user==$user_name || $user_level=='admin')
-                        {
-                            $can_edit = true;
-                        }
-                    }
-                }
+                $post_list = $post_list . "<div class='post_list_div_right'>";
 
                 $post_list = $post_list . 
-                    "<div class='post_div'>" . 
-                    "<div class='post_div_left'><a href='index.php?page=post&id=$post_id'>$post_title</a></div>";
-
-                if ($can_edit == true)
-                {
-                    $post_list = $post_list . 
-                        "<div class='post_div_right'>$post_date $user_name " . 
-                        $g_lang_text["post_read"]. "($read_number) " . 
-                        $g_lang_text["post_comment"]. "($comment_number) " . 
-                        "<a href='index.php?page=new_post&id=$post_id&action=edit'>" . $g_lang_text["post_edit"] . " </a>" . 
-                        "<a href='index.php?id=$post_id&action=delete'>" . $g_lang_text["post_delete"] . " </a>" . 
-                        "</div>";
-                }
-                else
-                {
-                    $post_list = $post_list . 
-                        "<div class='post_div_right'>$post_date $user_name " . 
-                        $g_lang_text["post_read"]. "($read_number) " . 
-                        $g_lang_text["post_comment"]. "($comment_number)" . 
-                        "</div>";
-                }
+                    make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id);
 
                 $post_list = $post_list . 
+                    "</div>" . 
                     "</div>";
             }
         }
@@ -880,18 +901,18 @@ function get_posts_list()
     return $post_list;
 }
 
-function get_page_link()
+function make_page_link()
 {
     global $g_cache;
     global $g_lang_text;
 
-    if (empty($g_lang_text))
+    if (empty($g_lang_text) || empty($g_cache))
     {
-        echo "Error: get_page_link() necessary params is null.";
+        echo "Error: make_page_link() necessary params is null.";
         exit;
     }
 
-    $page_posts = $g_cache->get_cache("tb_options_page_posts", "tb_options_page_posts");
+    $page_posts = $g_cache->get_cache("tb_options_page_posts", "get_page_posts");
 
     $page_link_html = "";
 
@@ -955,6 +976,112 @@ function get_page_link()
     }
 
     return $page_link_html;
+}
+
+function make_foot()
+{
+    global $g_db;
+
+    if (empty($g_db))
+    {
+        echo "Error: make_foot() necessary params is null.";
+        exit;
+    }
+
+    $foot_text = "";
+
+    $result = $g_db->get_tb_options_by_option_name("foot_text");
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $rows = $result["rows"];
+        //the column 2 is option_value
+        $foot_text = $rows[0][2];
+    }
+
+    return $foot_text;
+}
+
+function make_post_title()
+{
+    global $g_db;
+    global $g_cache;
+
+    if (empty($g_db) || empty($g_cache) || !isset($_REQUEST["id"]))
+    {
+        echo "Error: make_post_title() necessary params is null.";
+        exit;
+    }
+
+    $post_title_html = "";
+
+    $post_id = $_REQUEST["id"];
+    $result = $g_db->get_tb_posts_by_post_id($post_id);
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        $post = $rows[0];
+
+        //the column 0 is post_id
+        $post_id = $post[0];
+        //the column 1 is user_id
+        $user_id = $post[1];
+        //the column 3 is post_date
+        $post_date = $post[3];
+        //the column 5 is post_title
+        $post_title = $post[5];
+        //the column 6 is post_content
+        $post_content = $post[6];
+        //the column 7 is read_number
+        $read_number = $post[7];
+        //the column 8 is comment_number
+        $comment_number = $post[8];
+
+        //store the content of the post
+        $g_cache->set_cache("post_content", $post_content);
+
+        $result2 = $g_db->get_tb_users_by_user_id($user_id);
+        if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
+        {
+            $num2 = $result2["num"];
+            $rows2 = $result2["rows"];
+            $user2 = $rows2[0];
+
+            //the column 1 is user_name
+            $user_name = $user2[1];
+
+            $post_title_html = $post_title_html . 
+                "<div id='post_title_div'>$post_title</div>";
+
+            $post_title_html = $post_title_html . "<div id='post_info_div'>";
+
+            $post_title_html = $post_title_html . 
+                make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id);
+
+            $post_title_html = $post_title_html . 
+                "</div>";
+        }
+    }
+
+    return $post_title_html;
+}
+
+function make_post_content()
+{
+    global $g_db;
+    global $g_cache;
+
+    if (empty($g_db) || empty($g_cache))
+    {
+        echo "Error: make_post_content() necessary params is null.";
+        exit;
+    }
+
+    //get the content of the post cached
+    $post_content = $g_cache->get_cache("post_content", NULL);
+
+    return $post_content;
 }
 
 ?>

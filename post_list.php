@@ -1,7 +1,7 @@
 <div id="content_div">
-    <?php echo get_posts_list(); ?>
+    <?php echo make_post_list(); ?>
 </div>
 
 <div id='page_link_div'>
-    <?php echo get_page_link(); ?>
+    <?php echo make_page_link(); ?>
 </div>

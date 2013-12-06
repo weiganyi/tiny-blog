@@ -4,15 +4,15 @@
             <li>
                 <a href="index.php"><?php echo $g_lang_text["menu_home"]; ?></a>
             </li>
-            <?php echo get_new_post_menu(); ?>
-            <?php echo get_management_menu(); ?>
+            <?php echo make_new_post_menu(); ?>
+            <?php echo make_management_menu(); ?>
         </ul>
         <div class="menu_border"></div>
     </div>
 
     <div id="menu_login_div">
         <ul id="menu_login_ul">
-            <?php echo get_system_menu(); ?>
+            <?php echo make_system_menu(); ?>
         </ul>
         <div class="menu_border"></div>
     </div>
