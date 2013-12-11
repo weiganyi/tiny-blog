@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link type="text/css" rel="stylesheet" href="blog.css"/>
 	<script type="text/javascript" src="control/tb_function.js"></script>
+	<script type="text/javascript" src="control/tb_ajax.js"></script>
 </head>
 <body>
 <div id="body_div">

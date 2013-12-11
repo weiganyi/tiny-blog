@@ -2,19 +2,7 @@
     create by weiganyi on 20131127
 */
 
-function tb_ajax()
-{
-    this.get_post = function(url)
-    {
-        this.ajax_get(url, this.fn_get_post);
-    };
-
-    this.fn_get_post = function()
-    {
-    };
-}
-
-tb_ajax.prototype.ajax_get = function(url, callback_fn)
+function tb_ajax(url, callback_fn)
 {
     var req = new XMLHttpRequest();
 
@@ -26,9 +14,9 @@ tb_ajax.prototype.ajax_get = function(url, callback_fn)
         if (req.readyState == 4 && req.status == 200)
         {
             var type = req.getResponseHeader("Content-Type");
-            if (type.indexOf("xml") != -1 && req.responseXML)
+            if (type.indexOf("text/html") != -1 && req.responseText)
             {
-                callback_fn(req.responseXML);
+                callback_fn(req.responseText);
             }
         }
     };

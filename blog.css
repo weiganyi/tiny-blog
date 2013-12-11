@@ -341,7 +341,7 @@
 }
 
 /* post_list.php style */
-#content_div
+#post_list_div
 {
 	float: right;
 	width: 73%;
@@ -354,7 +354,7 @@
 	margin: 10px;
 }
 
-.post_list_div
+.post_list_item_div
 {
 	padding: 5px;
 	margin: 1px;
@@ -365,56 +365,56 @@
 	border-color: #DCDCDC;  /* dan hui se */
 }
 
-.post_list_div_left a:link
+.post_list_item_div_left a:link
 {
 	color: black;
 	text-decoration: none;
     font-size: 120%;
 }
 
-.post_list_div_left a:visited
+.post_list_item_div_left a:visited
 {
 	color: black;
     font-size: 120%;
 }
 
-.post_list_div_left a:hover
+.post_list_item_div_left a:hover
 {
 	color: black;
 	text-decoration: underline;
     font-size: 120%;
 }
 
-.post_list_div_left a:active
+.post_list_item_div_left a:active
 {
 	color: black;
     font-size: 120%;
 }
 
-.post_list_div_right
+.post_list_item_div_right
 {
     text-align: right;
     color: #696969;             /* shen hui se */
 }
 
-.post_list_div_right a:link
+.post_list_item_div_right a:link
 {
 	color: #696969;             /* shen hui se */
 	text-decoration: none;
 }
 
-.post_list_div_right a:visited
+.post_list_item_div_right a:visited
 {
 	color: #696969;             /* shen hui se */
 }
 
-.post_list_div_right a:hover
+.post_list_item_div_right a:hover
 {
 	color: #696969;             /* shen hui se */
 	text-decoration: underline;
 }
 
-.post_list_div_right a:active
+.post_list_item_div_right a:active
 {
 	color: #696969;             /* shen hui se */
 }
@@ -457,6 +457,27 @@
 }
 
 /* post.php style */
+#post_div
+{
+	float: right;
+	width: 73%;
+
+    border-collapse: collapse;
+    border-style: solid;
+	border-width: 1px;
+	border-color: #808080;      /* hui se */
+
+	margin: 10px;
+}
+
+.post_head_div
+{
+	color: black;
+    font-weight: bold;
+    text-align: center;
+	background-color: #DCDCDC;             /* dan hui se */
+}
+
 #post_title_div
 {
 	color: black;
@@ -469,25 +490,31 @@
     color: #696969;             /* shen hui se */
 }
 
-#post_info_div a:link
+#post_info_div a:link, .comment_info_div a:link
 {
 	color: #696969;             /* shen hui se */
 	text-decoration: none;
 }
 
-#post_info_div a:visited
+#post_info_div a:visited, .comment_info_div a:visited
 {
 	color: #696969;             /* shen hui se */
 }
 
-#post_info_div a:hover
+#post_info_div a:hover, .comment_info_div a:hover
 {
 	color: #696969;             /* shen hui se */
 	text-decoration: underline;
 }
 
-#post_info_div a:active
+#post_info_div a:active, .comment_info_div a:active
 {
 	color: #696969;             /* shen hui se */
+}
+
+.comment_info_div
+{
+    text-align: left;
+    color: #696969;             /* shen hui se */
 }
 

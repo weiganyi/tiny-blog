@@ -36,6 +36,14 @@ elseif ($g_login->is_jump_to_register() == true)
 {
     require_once(ROOTPATH . "register.php");
 }
+elseif (is_ajax() == true)
+{
+    $page = get_page();
+    if (!empty($page))
+    {
+        require_once(ROOTPATH . "$page.php");
+    }
+}
 else
 {
     require_once(ROOTPATH . "head.php");

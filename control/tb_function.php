@@ -298,22 +298,13 @@ function get_comment_number()
 
     $comment_number = "0";
 
-    $result = $g_db->get_tb_posts();
+    $result = $g_db->get_tb_comments();
     if (!empty($result["num"]) && !empty($result["rows"]))
     {
         $num = $result["num"];
         $rows = $result["rows"];
 
-        $comment_number = 0;
-        //calculate the number for all posts
-        for ($idx=0; $idx<$num; $idx++)
-        {
-            $post = $rows[$idx];
-            //the column 8 is comment_number
-            $comment_number = $comment_number + $post[8];
-        }
-
-        $comment_number = (String)$comment_number;
+        $comment_number = (String)$num;
     }
 
     $comment_number_html = "<span class='sidebar_content_right_span'>$comment_number</span>";
@@ -518,7 +509,7 @@ function make_reading_list()
             $post_title = substr($post_title, 0, 20);
 
             $reading_list = $reading_list . 
-                            "<a href='index.php?post=$post_id'>$post_title</a>" .
+                            "<a href='index.php?page=post&post_id=$post_id'>$post_title</a>" .
                             "<span class='sidebar_content_right_span'>($read_number)</span>" . 
                             "</br>";
         }
@@ -559,8 +550,8 @@ function make_comment_list()
             $post_id = $comment[1];
             //the column 2 is user_id
             $user_id = $comment[2];
-            //the column 5 is comment_content
-            $comment_content = $comment[5];
+            //the column 4 is comment_content
+            $comment_content = $comment[4];
 
             $result2 = $g_db->get_tb_posts_by_post_id($post_id);
             if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
@@ -587,7 +578,7 @@ function make_comment_list()
                     $comment_content = substr($comment_content, 0, 20);
 
                     $comment_list = $comment_list . 
-                                    "<a href='index.php?post=$post_id'>$post_title</a>" .
+                                    "<a href='index.php?page=post&post_id=$post_id'>$post_title</a>" .
                                     "</br>" .
                                     "<span id='sidebar_comment_span'>$comment_content</span>" . 
                                     "</br>";
@@ -629,6 +620,18 @@ function get_page()
     }
 }
 
+function is_ajax()
+{
+    if (isset($_REQUEST["ajax"]) && $_REQUEST["ajax"]==1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 function get_page_posts()
 {
     global $g_db;
@@ -665,7 +668,23 @@ function do_post_delete($post_id)
     return;
 }
 
-function get_posts_by_param()
+function do_post_list_action()
+{
+    //delete the post
+    if (isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    {
+        if ($_REQUEST["action"]=="delete")
+        {
+            $post_id = $_REQUEST["post_id"];
+
+            do_post_delete($post_id);
+        }
+    }
+
+    return;
+}
+
+function get_post_list_by_param()
 {
     global $g_db;
     global $g_login;
@@ -730,29 +749,12 @@ function get_posts_by_param()
             return $result2;
         }
     }
-    //delete the post
-    elseif (isset($_REQUEST["id"]) && isset($_REQUEST["action"]))
-    {
-        if ($_REQUEST["action"]=="delete")
-        {
-            $post_id = $_REQUEST["id"];
 
-            do_post_delete($post_id);
-        }
-
-        $result = $g_db->get_tb_posts_by_order("post_date");
-        if (!empty($result["num"]) && !empty($result["rows"]))
-        {
-            return $result;
-        }
-    }
-    else
+    //get posts list
+    $result = $g_db->get_tb_posts_by_order("post_date");
+    if (!empty($result["num"]) && !empty($result["rows"]))
     {
-        $result = $g_db->get_tb_posts_by_order("post_date");
-        if (!empty($result["num"]) && !empty($result["rows"]))
-        {
-            return $result;
-        }
+        return $result;
     }
 
     return array();;
@@ -801,8 +803,8 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
             "$post_date $user_name " . 
             $g_lang_text["post_read"]. "($read_number) " . 
             $g_lang_text["post_comment"]. "($comment_number) " . 
-            "<a href='index.php?page=new_post&id=$post_id&action=edit'>" . $g_lang_text["post_edit"] . " </a>" . 
-            "<a href='index.php?id=$post_id&action=delete'>" . $g_lang_text["post_delete"] . " </a>";
+            "<a href='index.php?page=new_post&post_id=$post_id&action=edit'>" . $g_lang_text["post_edit"] . " </a>" . 
+            "<a href='index.php?post_id=$post_id&action=delete'>" . $g_lang_text["post_delete"] . " </a>";
     }
     else
     {
@@ -832,7 +834,7 @@ function make_post_list()
 
     $post_list = "";
 
-    $result = get_posts_by_param();
+    $result = get_post_list_by_param();
     if (!empty($result["num"]) && !empty($result["rows"]) && !empty($page_posts))
     {
         $num = $result["num"];
@@ -869,24 +871,32 @@ function make_post_list()
             $post_title = $post[5];
             //the column 7 is read_number
             $read_number = $post[7];
-            //the column 8 is comment_number
-            $comment_number = $post[8];
 
-            $result2 = $g_db->get_tb_users_by_user_id($user_id);
-            if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
+            $comment_number = "0";
+            $result2 = $g_db->get_tb_comments_by_post_id($post_id);
+            if (!empty($result2["num"]) && !empty($result2["rows"]))
             {
                 $num2 = $result2["num"];
                 $rows2 = $result2["rows"];
-                $user2 = $rows2[0];
+
+                $comment_number = (String)$num2;
+            }
+
+            $result3 = $g_db->get_tb_users_by_user_id($user_id);
+            if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
+            {
+                $num3 = $result3["num"];
+                $rows3 = $result3["rows"];
+                $user3 = $rows3[0];
 
                 //the column 1 is user_name
-                $user_name = $user2[1];
+                $user_name = $user3[1];
 
                 $post_list = $post_list . 
-                    "<div class='post_list_div'>" . 
-                    "<div class='post_list_div_left'><a href='index.php?page=post&id=$post_id'>$post_title</a></div>";
+                    "<div class='post_list_item_div'>" . 
+                    "<div class='post_list_item_div_left'><a href='index.php?page=post&post_id=$post_id'>$post_title</a></div>";
 
-                $post_list = $post_list . "<div class='post_list_div_right'>";
+                $post_list = $post_list . "<div class='post_list_item_div_right'>";
 
                 $post_list = $post_list . 
                     make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id);
@@ -938,7 +948,7 @@ function make_page_link()
         {
             $page_link_html = $page_link_html . 
                 "<div id='page_num_div'>" . 
-                "<a href='index.php?pn=1'><< </a>";
+                "<a href='#' onclick='page_link_click(\"pn=1\");'><< </a>";
 
             //calculate the start page number will be displayed
             $start = 1;
@@ -965,12 +975,12 @@ function make_page_link()
                 else
                 {
                     $page_link_html = $page_link_html . 
-                        "<a href='index.php?pn=$idx'>$idx </a>";
+                        "<a href='#' onclick='page_link_click(\"pn=$idx\");'>$idx </a>";
                 }
             }
 
             $page_link_html = $page_link_html . 
-                "<a href='index.php?pn=$page_num'>>></a>" . 
+                "<a href='#' onclick='page_link_click(\"pn=$page_num\");'>>></a>" . 
                 "</div>";
         }
     }
@@ -1006,7 +1016,7 @@ function make_post_title()
     global $g_db;
     global $g_cache;
 
-    if (empty($g_db) || empty($g_cache) || !isset($_REQUEST["id"]))
+    if (empty($g_db) || empty($g_cache) || !isset($_REQUEST["post_id"]))
     {
         echo "Error: make_post_title() necessary params is null.";
         exit;
@@ -1014,7 +1024,10 @@ function make_post_title()
 
     $post_title_html = "";
 
-    $post_id = $_REQUEST["id"];
+    $post_id = $_REQUEST["post_id"];
+    //store the post id
+    $g_cache->set_cache("post_id", $post_id);
+
     $result = $g_db->get_tb_posts_by_post_id($post_id);
     if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
     {
@@ -1035,21 +1048,29 @@ function make_post_title()
         $post_content = $post[6];
         //the column 7 is read_number
         $read_number = $post[7];
-        //the column 8 is comment_number
-        $comment_number = $post[8];
+
+        $comment_number = "0";
+        $result2 = $g_db->get_tb_comments_by_post_id($post_id);
+        if (!empty($result2["num"]) && !empty($result2["rows"]))
+        {
+            $num2 = $result2["num"];
+            $rows2 = $result2["rows"];
+
+            $comment_number = (String)$num2;
+        }
 
         //store the content of the post
         $g_cache->set_cache("post_content", $post_content);
 
-        $result2 = $g_db->get_tb_users_by_user_id($user_id);
-        if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
+        $result3 = $g_db->get_tb_users_by_user_id($user_id);
+        if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
         {
-            $num2 = $result2["num"];
-            $rows2 = $result2["rows"];
-            $user2 = $rows2[0];
+            $num3 = $result3["num"];
+            $rows3 = $result3["rows"];
+            $user3 = $rows3[0];
 
             //the column 1 is user_name
-            $user_name = $user2[1];
+            $user_name = $user3[1];
 
             $post_title_html = $post_title_html . 
                 "<div id='post_title_div'>$post_title</div>";
@@ -1069,10 +1090,9 @@ function make_post_title()
 
 function make_post_content()
 {
-    global $g_db;
     global $g_cache;
 
-    if (empty($g_db) || empty($g_cache))
+    if (empty($g_cache))
     {
         echo "Error: make_post_content() necessary params is null.";
         exit;
@@ -1082,6 +1102,246 @@ function make_post_content()
     $post_content = $g_cache->get_cache("post_content", NULL);
 
     return $post_content;
+}
+
+function do_comment_delete($comment_id)
+{
+    global $g_db;
+
+    if (empty($comment_id) || empty($g_db))
+    {
+        echo "Error: do_comment_delete() necessary params is null.";
+        exit;
+    }
+
+    //delete the comment
+    $g_db->delete_tb_comments($comment_id);
+
+    return;
+}
+
+function do_comment_add($post_id, $user_id, $comment_content)
+{
+    global $g_db;
+
+    if (empty($post_id) || empty($user_id) || empty($comment_content) || empty($g_db))
+    {
+        echo "Error: do_comment_add() necessary params is null.";
+        exit;
+    }
+
+    $comment_date = date("Y-m-d h:i:s");
+
+    $comment_array = array("post_id"=>"$post_id", 
+                        "user_id"=>"$user_id", 
+                        "comment_date"=>"$comment_date", 
+                        "comment_content"=>"$comment_content");
+
+    //add the comment
+    $g_db->insert_tb_comments($comment_array);
+
+    return;
+}
+
+function do_post_action()
+{
+    //delete the comment
+    if (isset($_REQUEST["comment_id"]) && isset($_REQUEST["action"]))
+    {
+        if ($_REQUEST["action"]=="delete")
+        {
+            $comment_id = $_REQUEST["comment_id"];
+
+            do_comment_delete($comment_id);
+        }
+    }
+    //add the comment
+    elseif (isset($_REQUEST["post_id"]) && isset($_REQUEST["user_id"]) && isset($_REQUEST["content"]))
+    {
+        $post_id = $_REQUEST["post_id"];
+        $user_id = $_REQUEST["user_id"];
+        $content = $_REQUEST["content"];
+
+        do_comment_add($post_id, $user_id, $content);
+    }
+
+    return;
+}
+
+function make_comment_content()
+{
+    global $g_db;
+    global $g_cache;
+    global $g_login;
+    global $g_lang_text;
+
+    if (empty($g_db) || empty($g_cache) || empty($g_login))
+    {
+        echo "Error: make_comment_content() necessary params is null.";
+        exit;
+    }
+
+    $comment_html = "";
+
+    $post_id = $g_cache->get_cache("post_id", NULL);
+    if ($post_id == NULL)
+    {
+        echo "Error: make_comment_content() get_cache post_id is null.";
+        exit;
+    }
+
+    $result = $g_db->get_tb_comments_by_post_id($post_id);
+    if (!empty($result["num"]) && !empty($result["rows"]))
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        if ($num > 0)
+        {
+            $comment_html = $comment_html . "<div class='post_head_div'>" . 
+                $g_lang_text['comment_view_head'] . 
+                "</div>";
+        }
+
+        for ($idx=0; $idx<$num; $idx++)
+        {
+            $comment = $rows[$idx];
+
+            //the column 0 is comment_id
+            $comment_id = $comment[0];
+            //the column 2 is user_id
+            $user_id = $comment[2];
+            //the column 3 is comment_date
+            $comment_date = $comment[3];
+            //the column 4 is comment_content
+            $comment_content = $comment[4];
+
+            $result2 = $g_db->get_tb_users_by_user_id($user_id);
+            if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
+            {
+                $num2 = $result2["num"];
+                $rows2 = $result2["rows"];
+                $user2 = $rows2[0];
+
+                //the column 1 is user_name
+                $user_name = $user2[1];
+                //the column 5 is user_level
+                $user_level = $user2[5];
+
+                //if the logined user is the user of this post, or is the admin
+                //it should add edit or delete link for this post
+                $can_edit = false;
+                $logined_user = $g_login->get_logined_user();
+                if (!empty($logined_user))
+                {
+                    $result3 = $g_db->get_tb_users_by_user_name($logined_user);
+                    if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
+                    {
+                        $num3 = $result3["num"];
+                        $rows3 = $result3["rows"];
+                        $user3 = $rows3[0];
+
+                        //the column 5 is user_level
+                        $user_level2 = $user3[5];
+
+                        if ($logined_user==$user_name || $user_level2=='admin')
+                        {
+                            $can_edit = true;
+                        }
+                    }
+                }
+
+                //add comment info
+                $comment_html = $comment_html . "<div class='comment_info_div'>";
+
+                if ($can_edit == true)
+                {
+                    $comment_html = $comment_html . 
+                        "$user_name $comment_date " . 
+                        "<a href='index.php?page=post&post_id=$post_id&comment_id=$comment_id&action=delete'>" . $g_lang_text["comment_delete"] . " </a>";
+                }
+                else
+                {
+                    $comment_html = $comment_html . 
+                        "$user_name $comment_date ";
+                }
+
+                $comment_html = $comment_html . 
+                    "</div>";
+
+                //add comment content
+                $comment_html = $comment_html . "<div class='comment_content_div'>" . 
+                    "$comment_content" . 
+                    "</div>";
+            }
+        }
+    }
+
+    return $comment_html;
+}
+
+function make_comment_write()
+{
+    global $g_db;
+    global $g_cache;
+    global $g_login;
+    global $g_lang_text;
+
+    if (empty($g_db) || empty($g_cache) || empty($g_login))
+    {
+        echo "Error: make_comment_write() necessary params is null.";
+        exit;
+    }
+
+    $comment_html = "";
+
+    $logined_user = $g_login->get_logined_user();
+    if (!empty($logined_user))
+    {
+        $post_id = $g_cache->get_cache("post_id", NULL);
+        if ($post_id == NULL)
+        {
+            echo "Error: make_comment_write() get_cache post_id is null.";
+            exit;
+        }
+
+        $result = $g_db->get_tb_users_by_user_name($logined_user);
+        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+        {
+            $num = $result["num"];
+            $rows = $result["rows"];
+            $user = $rows[0];
+
+            //the column 0 is user_id
+            $user_id = $user[0];
+            //the column 1 is user_name
+            $user_name = $user[1];
+        }
+
+        $comment_html = $comment_html . "<div class='post_head_div'>" . 
+            $g_lang_text['comment_write_head'] . 
+            "</div>";
+
+        //add comment write form
+        $comment_html = $comment_html . "<div class='comment_write_div'>";
+
+        $comment_html = $comment_html . "<div class='comment_write_user_div'>" . 
+            $g_lang_text["comment_user"] . ": $user_name" . 
+            "</div>";
+
+        $comment_html = $comment_html . "<form method='post' id='comment_write_form' name='comment_write_form' action='index.php?page=post'>" . 
+            "<input type='hidden' id='comment_post_id' name='post_id' value='$post_id'>" . 
+            "<input type='hidden' id='comment_user_id' name='user_id' value='$user_id'>" . 
+            "<textarea rows='10' cols='80' id='comment_content' name='content'></textarea>" . 
+            "</br>" . 
+            "<input type='submit' value='" . $g_lang_text["comment_submit"] . "'>" . 
+            "</form>";
+
+        $comment_html = $comment_html . 
+            "</div>";
+    }
+
+    return $comment_html;
 }
 
 ?>

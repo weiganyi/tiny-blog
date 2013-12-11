@@ -161,18 +161,18 @@ class tb_db
         {
             $query = "insert into tb_posts 
                 (post_id, user_id, category_id, post_date, post_modified, post_title, 
-                post_content, read_number, comment_number) 
+                post_content, read_number) 
                 values 
                 ('0', '$user_id', '$category_id', '$post_date', '$post_modified', 
-                '$post_title', '$post_content', '$read_number', '$comment_number')";
+                '$post_title', '$post_content', '$read_number')";
         }
         else
         {
             $query = "update tb_posts set
                 user_id='$user_id', category_id='$category_id', post_date='$post_date', 
                 post_modified='$post_modified', post_title='$post_title', 
-                post_content='$post_content', read_number='$read_number', 
-                comment_number='$comment_number' where post_id='$post_id'";
+                post_content='$post_content', read_number='$read_number' 
+                where post_id='$post_id'";
         }
 
         $result = $this->db_control->do_sql_query_without_result($query);
@@ -361,19 +361,33 @@ class tb_db
         if (empty($comment_id))
         {
             $query = "insert into tb_comments 
-                (comment_id, post_id, user_id, comment_date, comment_parent_id, comment_content) 
+                (comment_id, post_id, user_id, comment_date, comment_content) 
                 values 
-                ('0', '$post_id', '$user_id', '$comment_date', '$comment_parent_id', '$comment_content')";
+                ('0', '$post_id', '$user_id', '$comment_date', '$comment_content')";
         }
         else
         {
             $query = "update tb_comments set
                 post_id='$post_id', user_id='$user_id', comment_date='$comment_date', 
-                comment_parent_id='$comment_parent_id', comment_content='$comment_content' 
-                where comment_id='$comment_id'";
+                comment_content='$comment_content' where comment_id='$comment_id'";
         }
 
         $result = $this->db_control->do_sql_query_without_result($query);
+
+        return $result;
+    }
+
+    function get_tb_comments()
+    {
+        if (empty($this->db_control))
+        {
+            echo "Error: tb_db->get_tb_comments() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_comments";
+
+        $result = $this->db_control->do_sql_query($query);
 
         return $result;
     }
@@ -387,6 +401,21 @@ class tb_db
         }
 
         $query = "select * from tb_comments order by $field desc";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_comments_by_post_id($post_id)
+    {
+        if (empty($this->db_control) || empty($post_id))
+        {
+            echo "Error: tb_db->get_tb_comments_by_post_id() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_comments where post_id=$post_id order by comment_date desc";
 
         $result = $this->db_control->do_sql_query($query);
 
@@ -417,66 +446,6 @@ class tb_db
         }
 
         $query = "delete from tb_comments where post_id='$post_id'";
-
-        $result = $this->db_control->do_sql_query_without_result($query);
-
-        return $result;
-    }
-
-    function insert_tb_links($link_attr)
-    {
-        if (empty($this->db_control) || empty($link_attr))
-        {
-            echo "Error: tb_db->insert_tb_links() necessary params is null.";
-            exit;
-        }
-
-        //load the array variable into the symbol table
-        extract($link_attr);
-
-        //if it is insert, $link_id should be found, otherwise it is update
-        if (empty($link_id))
-        {
-            $query = "insert into tb_links 
-                (link_id, link_name, link_url) 
-                values 
-                ('0', '$link_id', '$link_url')";
-        }
-        else
-        {
-            $query = "update tb_links set
-                link_name='$link_name', link_url='$link_url' where link_id='$link_id'";
-        }
-
-        $result = $this->db_control->do_sql_query_without_result($query);
-
-        return $result;
-    }
-
-    function get_tb_links()
-    {
-        if (empty($this->db_control))
-        {
-            echo "Error: tb_db->get_tb_links() necessary params is null.";
-            exit;
-        }
-
-        $query = "select * from tb_links";
-
-        $result = $this->db_control->do_sql_query($query);
-
-        return $result;
-    }
-
-    function delete_tb_links($link_id)
-    {
-        if (empty($this->db_control) || empty($link_id))
-        {
-            echo "Error: tb_db->delete_tb_links() necessary params is null.";
-            exit;
-        }
-
-        $query = "delete from tb_links where link_id='$link_id'";
 
         $result = $this->db_control->do_sql_query_without_result($query);
 
