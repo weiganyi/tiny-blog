@@ -1,3 +1,4 @@
+
 <div id="sidebar_div">
     <div class="sidebar_frame_div">
         <div class="sidebar_title_div"><?php echo $g_lang_text["sidebar_notice_title"]; ?></div>

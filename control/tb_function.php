@@ -1168,6 +1168,108 @@ function do_post_action()
     return;
 }
 
+function do_post_read_inc($post_id)
+{
+    global $g_db;
+
+    if (empty($post_id) || empty($g_db))
+    {
+        echo "Error: do_post_read_inc() necessary params is null.";
+        exit;
+    }
+
+    $result = $g_db->get_tb_posts_by_post_id($post_id);
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        $post = $rows[0];
+
+        //the column 0 is post_id
+        $post_id = $post[0];
+        //the column 1 is user_id
+        $user_id = $post[1];
+        //the column 2 is category_id
+        $category_id = $post[2];
+        //the column 3 is post_date
+        $post_date = $post[3];
+        //the column 4 is post_modified
+        $post_modified = $post[4];
+        //the column 5 is post_title
+        $post_title = $post[5];
+        //the column 6 is post_content
+        $post_content = $post[6];
+        //the column 7 is read_number
+        $read_number = $post[7];
+
+        //increase the read number
+        $read_number = (String)((int)$read_number + 1);
+
+        $post_array = array("post_id"=>"$post_id", 
+                            "user_id"=>"$user_id", 
+                            "category_id"=>"$category_id", 
+                            "post_date"=>"$post_date", 
+                            "post_modified"=>"$post_modified", 
+                            "post_title"=>"$post_title", 
+                            "post_content"=>"$post_content", 
+                            "read_number"=>"$read_number");
+
+        //update the post
+        $g_db->insert_tb_posts($post_array);
+    }
+
+    return;
+}
+
+function do_post_read_action()
+{
+    //calculate the read number for this page
+    if (isset($_REQUEST["page"]) && $_REQUEST["page"]=="post" && isset($_REQUEST["post_id"]))
+    {
+        if (!isset($_COOKIE["visit_post"]))
+        {
+            $post_id = $_REQUEST["post_id"];
+
+            //increase the read number of this post
+            do_post_read_inc($post_id);
+
+            //set the cookie
+            $post_array = array();
+            $post_array[0] = $post_id;
+            $post_id_list = implode(".", $post_array);
+            setcookie("visit_post", $post_id_list);
+        }
+        else
+        {
+            $visit_post = $_COOKIE["visit_post"];
+            $post_id = $_REQUEST["post_id"];
+
+            //check whether this post is already included
+            $post_array = explode(".", $visit_post);
+            foreach ($post_array as $i => $value)
+            {
+                if ($post_id == $value)
+                {
+                    //this post is already included, return
+                    return;
+                }
+            }
+
+            //increase the read number of this post
+            do_post_read_inc($post_id);
+
+            //modify the cookie
+            $post_array_len = count($post_array);
+            $post_array[$post_array_len] = $post_id;
+            $post_id_list = implode(".", $post_array);
+            setcookie("visit_post", $post_id_list);
+        }
+    }
+
+    return;
+}
+
 function make_comment_content()
 {
     global $g_db;
@@ -1175,7 +1277,7 @@ function make_comment_content()
     global $g_login;
     global $g_lang_text;
 
-    if (empty($g_db) || empty($g_cache) || empty($g_login))
+    if (empty($g_db) || empty($g_cache) || empty($g_login) || empty($g_lang_text))
     {
         echo "Error: make_comment_content() necessary params is null.";
         exit;
@@ -1287,7 +1389,7 @@ function make_comment_write()
     global $g_login;
     global $g_lang_text;
 
-    if (empty($g_db) || empty($g_cache) || empty($g_login))
+    if (empty($g_db) || empty($g_cache) || empty($g_login) || empty($g_lang_text) || empty($g_lang_text))
     {
         echo "Error: make_comment_write() necessary params is null.";
         exit;

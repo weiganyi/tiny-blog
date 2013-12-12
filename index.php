@@ -46,6 +46,9 @@ elseif (is_ajax() == true)
 }
 else
 {
+    //because the setcookie need be done before any html output, so do it in here
+    do_post_read_action();
+
     require_once(ROOTPATH . "head.php");
     require_once(ROOTPATH . "menu.php");
     require_once(ROOTPATH . "sidebar.php");

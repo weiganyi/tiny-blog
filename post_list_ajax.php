@@ -1,3 +1,4 @@
+
 <div id='post_list_div'>
     <?php echo make_post_list(); ?>
 </div>
