@@ -6,6 +6,9 @@
 	<link type="text/css" rel="stylesheet" href="blog.css"/>
 	<script type="text/javascript" src="control/tb_function.js"></script>
 	<script type="text/javascript" src="control/tb_ajax.js"></script>
+	<script type="text/javascript" src="mini-editor/jquery-1.10.1.js"></script>
+	<link type="text/css" rel="stylesheet" href="mini-editor/mini_editor.css"/>
+	<script type="text/javascript" src="mini-editor/mini_editor.js"></script>
 </head>
 <body>
 <div id="body_div">

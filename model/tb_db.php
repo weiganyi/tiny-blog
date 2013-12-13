@@ -160,19 +160,18 @@ class tb_db
         if (empty($post_id))
         {
             $query = "insert into tb_posts 
-                (post_id, user_id, category_id, post_date, post_modified, post_title, 
+                (post_id, user_id, category_id, post_date, post_title, 
                 post_content, read_number) 
                 values 
-                ('0', '$user_id', '$category_id', '$post_date', '$post_modified', 
+                ('0', '$user_id', '$category_id', '$post_date', 
                 '$post_title', '$post_content', '$read_number')";
         }
         else
         {
             $query = "update tb_posts set
                 user_id='$user_id', category_id='$category_id', post_date='$post_date', 
-                post_modified='$post_modified', post_title='$post_title', 
-                post_content='$post_content', read_number='$read_number' 
-                where post_id='$post_id'";
+                post_title='$post_title', post_content='$post_content', 
+                read_number='$read_number' where post_id='$post_id'";
         }
 
         $result = $this->db_control->do_sql_query_without_result($query);
@@ -212,7 +211,7 @@ class tb_db
 
     function get_tb_posts_num_by_cat_id($category_id)
     {
-        if (empty($this->db_control) || empty($category_id))
+        if (empty($this->db_control))
         {
             echo "Error: tb_db->get_tb_posts_num_by_cat_id() necessary params is null.";
             exit;
@@ -227,7 +226,7 @@ class tb_db
 
     function get_tb_posts_by_cat_id($category_id)
     {
-        if (empty($this->db_control) || empty($category_id))
+        if (empty($this->db_control))
         {
             echo "Error: tb_db->get_tb_posts_by_cat_id() necessary params is null.";
             exit;

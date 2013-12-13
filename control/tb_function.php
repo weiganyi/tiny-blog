@@ -274,8 +274,8 @@ function get_read_number()
         for ($idx=0; $idx<$num; $idx++)
         {
             $post = $rows[$idx];
-            //the column 7 is read_number
-            $read_number = $read_number + $post[7];
+            //the column 6 is read_number
+            $read_number = $read_number + $post[6];
         }
 
         $read_number = (String)$read_number;
@@ -344,8 +344,9 @@ function get_user_email()
 function make_category_list()
 {
     global $g_db;
+    global $g_lang_text;
 
-    if (empty($g_db))
+    if (empty($g_db) || empty($g_lang_text))
     {
         echo "Error: make_category_list() necessary params is null.";
         exit;
@@ -381,6 +382,19 @@ function make_category_list()
                 }
             }
         }
+    }
+
+    //add the post number of the uncategorized
+    $result3 = $g_db->get_tb_posts_num_by_cat_id("0");
+    if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
+    {
+        $rows3 = $result3["rows"];
+        $post_number = $rows3[0][0];
+
+        $category_list = $category_list . 
+                        "<a href='index.php?cat=uncategorized'>". $g_lang_text["tb_func_uncategorized"] . "</a>" .
+                        " ($post_number)" . 
+                        "</br>";
     }
 
     return $category_list;
@@ -501,10 +515,10 @@ function make_reading_list()
 
             //the column 0 is post_id
             $post_id = $post[0];
-            //the column 5 is post_title
-            $post_title = $post[5];
-            //the column 7 is read_number
-            $read_number = $post[7];
+            //the column 4 is post_title
+            $post_title = $post[4];
+            //the column 6 is read_number
+            $read_number = $post[6];
 
             $post_title = substr($post_title, 0, 20);
 
@@ -560,8 +574,8 @@ function make_comment_list()
                 $rows2 = $result2["rows"];
                 $post = $rows2[0];
 
-                //the column 5 is post_title
-                $post_title = $post[5];
+                //the column 4 is post_title
+                $post_title = $post[4];
 
                 $result3 = $g_db->get_tb_users_by_user_id($user_id);
                 if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
@@ -693,19 +707,28 @@ function get_post_list_by_param()
     if (isset($_REQUEST["cat"]))
     {
         $cat_name = $_REQUEST["cat"];
-        $result = $g_db->get_tb_categories_by_cat_name($cat_name);
-        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+        $category_id = "0";
+        //if $cat_name is uncategorized, $category_id is 0
+        if ($cat_name == "uncategorized ")
         {
-            $rows = $result["rows"];
-            $category = $rows[0];
-            //the column 0 is category_id
-            $category_id = $category[0];
-
-            $result = $g_db->get_tb_posts_by_cat_id($category_id);
-            if (!empty($result["num"]) && !empty($result["rows"]))
+            $category_id = "0";
+        }
+        else
+        {
+            $result = $g_db->get_tb_categories_by_cat_name($cat_name);
+            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
             {
-                return $result;
+                $rows = $result["rows"];
+                $category = $rows[0];
+                //the column 0 is category_id
+                $category_id = $category[0];
             }
+        }
+
+        $result = $g_db->get_tb_posts_by_cat_id($category_id);
+        if (!empty($result["num"]) && !empty($result["rows"]))
+        {
+            return $result;
         }
     }
     //search by archive date
@@ -801,17 +824,17 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
     {
         $post_list = $post_list . 
             "$post_date $user_name " . 
-            $g_lang_text["post_read"]. "($read_number) " . 
-            $g_lang_text["post_comment"]. "($comment_number) " . 
-            "<a href='index.php?page=new_post&post_id=$post_id&action=edit'>" . $g_lang_text["post_edit"] . " </a>" . 
-            "<a href='index.php?post_id=$post_id&action=delete'>" . $g_lang_text["post_delete"] . " </a>";
+            $g_lang_text["tb_func_post_read"]. "($read_number) " . 
+            $g_lang_text["tb_func_post_comment"]. "($comment_number) " . 
+            "<a href='index.php?page=new_post&post_id=$post_id&action=edit'>" . $g_lang_text["tb_func_post_edit"] . " </a>" . 
+            "<a href='index.php?post_id=$post_id&action=delete'>" . $g_lang_text["tb_func_post_delete"] . " </a>";
     }
     else
     {
         $post_list = $post_list . 
             "$post_date $user_name " . 
-            $g_lang_text["post_read"]. "($read_number) " . 
-            $g_lang_text["post_comment"]. "($comment_number)";
+            $g_lang_text["tb_func_post_read"]. "($read_number) " . 
+            $g_lang_text["tb_func_post_comment"]. "($comment_number)";
     }
 
     return $post_list;
@@ -819,12 +842,11 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
 
 function make_post_list()
 {
-    global $g_lang_text;
     global $g_login;
     global $g_cache;
     global $g_db;
 
-    if (empty($g_cache) || empty($g_lang_text) || empty($g_login) || empty($g_db))
+    if (empty($g_cache) || empty($g_login) || empty($g_db))
     {
         echo "Error: make_post_list() necessary params is null.";
         exit;
@@ -867,10 +889,10 @@ function make_post_list()
             $user_id = $post[1];
             //the column 3 is post_date
             $post_date = $post[3];
-            //the column 5 is post_title
-            $post_title = $post[5];
-            //the column 7 is read_number
-            $read_number = $post[7];
+            //the column 4 is post_title
+            $post_title = $post[4];
+            //the column 6 is read_number
+            $read_number = $post[6];
 
             $comment_number = "0";
             $result2 = $g_db->get_tb_comments_by_post_id($post_id);
@@ -914,9 +936,8 @@ function make_post_list()
 function make_page_link()
 {
     global $g_cache;
-    global $g_lang_text;
 
-    if (empty($g_lang_text) || empty($g_cache))
+    if (empty($g_cache))
     {
         echo "Error: make_page_link() necessary params is null.";
         exit;
@@ -1042,12 +1063,12 @@ function make_post_title()
         $user_id = $post[1];
         //the column 3 is post_date
         $post_date = $post[3];
-        //the column 5 is post_title
-        $post_title = $post[5];
-        //the column 6 is post_content
-        $post_content = $post[6];
-        //the column 7 is read_number
-        $read_number = $post[7];
+        //the column 4 is post_title
+        $post_title = $post[4];
+        //the column 5 is post_content
+        $post_content = $post[5];
+        //the column 6 is read_number
+        $read_number = $post[6];
 
         $comment_number = "0";
         $result2 = $g_db->get_tb_comments_by_post_id($post_id);
@@ -1143,6 +1164,113 @@ function do_comment_add($post_id, $user_id, $comment_content)
     return;
 }
 
+function do_post_add($post_title, $post_content)
+{
+    global $g_db;
+    global $g_login;
+
+    if (empty($post_title) || empty($post_content) || empty($g_db) || empty($g_login))
+    {
+        echo "Error: do_post_add() necessary params is null.";
+        exit;
+    }
+
+    //find logined user id
+    $logined_user = $g_login->get_logined_user();
+    if (!empty($logined_user))
+    {
+        $result = $g_db->get_tb_users_by_user_name($logined_user);
+        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+        {
+            $num = $result["num"];
+            $rows = $result["rows"];
+            $user = $rows[0];
+
+            //the column 0 is user_id
+            $user_id = $user[0];
+
+            $post_id = 0;
+            $category_id = 0;
+            $post_date = date("Y-m-d h:i:s");
+            $read_number = "0";
+
+            $post_array = array("post_id"=>"$post_id", 
+                                "user_id"=>"$user_id", 
+                                "category_id"=>"$category_id", 
+                                "post_date"=>"$post_date", 
+                                "post_title"=>"$post_title", 
+                                "post_content"=>"$post_content", 
+                                "read_number"=>"$read_number");
+
+            //add the post
+            $g_db->insert_tb_posts($post_array);
+
+            //get the post id that had been insert just
+            $result2 = $g_db->get_tb_posts_by_order("post_id");
+            if (!empty($result2["num"]) && !empty($result2["rows"]))
+            {
+                $num = $result2["num"];
+                $rows = $result2["rows"];
+                $post = $rows[0];
+
+                //the column 0 is post_id
+                $_REQUEST["post_id"] = $post[0];
+            }
+            else
+            {
+                echo "Error: do_post_add() save post failure.";
+                exit;
+            }
+        }
+    }
+
+    return;
+}
+
+function do_post_edit($post_id, $post_title, $post_content)
+{
+    global $g_db;
+
+    if (empty($g_db) || empty($post_id) || empty($post_title) || empty($post_content))
+    {
+        echo "Error: do_post_edit() necessary params is null.";
+        exit;
+    }
+
+    $result = $g_db->get_tb_posts_by_post_id($post_id);
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        $post = $rows[0];
+
+        //the column 0 is post_id
+        $post_id = $post[0];
+        //the column 1 is user_id
+        $user_id = $post[1];
+        //the column 2 is category_id
+        $category_id = $post[2];
+        //the column 3 is post_date
+        $post_date = $post[3];
+        //the column 6 is read_number
+        $read_number = $post[6];
+
+        $post_array = array("post_id"=>"$post_id", 
+                            "user_id"=>"$user_id", 
+                            "category_id"=>"$category_id", 
+                            "post_date"=>"$post_date", 
+                            "post_title"=>"$post_title", 
+                            "post_content"=>"$post_content", 
+                            "read_number"=>"$read_number");
+
+        //update the post
+        $g_db->insert_tb_posts($post_array);
+    }
+
+    return;
+}
+
 function do_post_action()
 {
     //delete the comment
@@ -1163,6 +1291,28 @@ function do_post_action()
         $content = $_REQUEST["content"];
 
         do_comment_add($post_id, $user_id, $content);
+    }
+    //add the post
+    elseif (isset($_REQUEST["me_editor_title"]) && isset($_REQUEST["me_editor_content"])
+            && !isset($_REQUEST["post_id"]) && !isset($_REQUEST["action"]))
+    {
+        $post_title = $_REQUEST["me_editor_title"];
+        $post_content = $_REQUEST["me_editor_content"];
+
+        do_post_add($post_title, $post_content);
+    }
+    //edit the post
+    elseif (isset($_REQUEST["me_editor_title"]) && isset($_REQUEST["me_editor_content"])
+            && isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    {
+        if ($_REQUEST["action"]=="edit")
+        {
+            $post_id = $_REQUEST["post_id"];
+            $post_title = $_REQUEST["me_editor_title"];
+            $post_content = $_REQUEST["me_editor_content"];
+
+            do_post_edit($post_id, $post_title, $post_content);
+        }
     }
 
     return;
@@ -1194,14 +1344,12 @@ function do_post_read_inc($post_id)
         $category_id = $post[2];
         //the column 3 is post_date
         $post_date = $post[3];
-        //the column 4 is post_modified
-        $post_modified = $post[4];
-        //the column 5 is post_title
-        $post_title = $post[5];
-        //the column 6 is post_content
-        $post_content = $post[6];
-        //the column 7 is read_number
-        $read_number = $post[7];
+        //the column 4 is post_title
+        $post_title = $post[4];
+        //the column 5 is post_content
+        $post_content = $post[5];
+        //the column 6 is read_number
+        $read_number = $post[6];
 
         //increase the read number
         $read_number = (String)((int)$read_number + 1);
@@ -1210,7 +1358,6 @@ function do_post_read_inc($post_id)
                             "user_id"=>"$user_id", 
                             "category_id"=>"$category_id", 
                             "post_date"=>"$post_date", 
-                            "post_modified"=>"$post_modified", 
                             "post_title"=>"$post_title", 
                             "post_content"=>"$post_content", 
                             "read_number"=>"$read_number");
@@ -1301,7 +1448,7 @@ function make_comment_content()
         if ($num > 0)
         {
             $comment_html = $comment_html . "<div class='post_head_div'>" . 
-                $g_lang_text['comment_view_head'] . 
+                $g_lang_text['post_comment_view_head'] . 
                 "</div>";
         }
 
@@ -1360,7 +1507,7 @@ function make_comment_content()
                 {
                     $comment_html = $comment_html . 
                         "$user_name $comment_date " . 
-                        "<a href='index.php?page=post&post_id=$post_id&comment_id=$comment_id&action=delete'>" . $g_lang_text["comment_delete"] . " </a>";
+                        "<a href='index.php?page=post&post_id=$post_id&comment_id=$comment_id&action=delete'>" . $g_lang_text["tb_func_comment_delete"] . " </a>";
                 }
                 else
                 {
@@ -1421,22 +1568,22 @@ function make_comment_write()
         }
 
         $comment_html = $comment_html . "<div class='post_head_div'>" . 
-            $g_lang_text['comment_write_head'] . 
+            $g_lang_text['post_comment_write_head'] . 
             "</div>";
 
         //add comment write form
         $comment_html = $comment_html . "<div class='comment_write_div'>";
 
         $comment_html = $comment_html . "<div class='comment_write_user_div'>" . 
-            $g_lang_text["comment_user"] . ": $user_name" . 
+            $g_lang_text["tb_func_comment_user"] . ": $user_name" . 
             "</div>";
 
-        $comment_html = $comment_html . "<form method='post' id='comment_write_form' name='comment_write_form' action='index.php?page=post'>" . 
-            "<input type='hidden' id='comment_post_id' name='post_id' value='$post_id'>" . 
-            "<input type='hidden' id='comment_user_id' name='user_id' value='$user_id'>" . 
-            "<textarea rows='10' cols='80' id='comment_content' name='content'></textarea>" . 
+        $comment_html = $comment_html . "<form method='post' name='comment_write_form' action='index.php?page=post'>" . 
+            "<input type='hidden' name='post_id' value='$post_id'>" . 
+            "<input type='hidden' name='user_id' value='$user_id'>" . 
+            "<textarea rows='10' cols='80' name='content'></textarea>" . 
             "</br>" . 
-            "<input type='submit' value='" . $g_lang_text["comment_submit"] . "'>" . 
+            "<input type='submit' value='" . $g_lang_text["tb_func_comment_submit"] . "'>" . 
             "</form>";
 
         $comment_html = $comment_html . 
@@ -1444,6 +1591,97 @@ function make_comment_write()
     }
 
     return $comment_html;
+}
+
+function get_post_title()
+{
+    global $g_cache;
+    global $g_db;
+
+    if (empty($g_db) || empty($g_cache))
+    {
+        echo "Error: get_post_title() necessary params is null.";
+        exit;
+    }
+
+    $post_title = "";
+
+    //edit the post
+    if (isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    {
+        if ($_REQUEST["action"]=="edit")
+        {
+            $post_id = $_REQUEST["post_id"];
+
+            $result = $g_db->get_tb_posts_by_post_id($post_id);
+            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+            {
+                $num = $result["num"];
+                $rows = $result["rows"];
+                $post = $rows[0];
+
+                //the column 4 is post_title
+                $post_title = $post[4];
+
+            }
+        }
+    }
+
+    return $post_title;
+}
+
+function get_post_content()
+{
+    global $g_cache;
+    global $g_db;
+
+    if (empty($g_db) || empty($g_cache))
+    {
+        echo "Error: get_post_content() necessary params is null.";
+        exit;
+    }
+
+    $post_content = "";
+
+    //edit the post
+    if (isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    {
+        if ($_REQUEST["action"]=="edit")
+        {
+            $post_id = $_REQUEST["post_id"];
+
+            $result = $g_db->get_tb_posts_by_post_id($post_id);
+            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+            {
+                $num = $result["num"];
+                $rows = $result["rows"];
+                $post = $rows[0];
+
+                //the column 5 is post_content
+                $post_content = $post[5];
+
+            }
+        }
+    }
+
+    return $post_content;
+}
+
+function get_post_edit_param()
+{
+    $post_edit_param = "";
+
+    if (isset($_REQUEST["post_id"]))
+    {
+        $post_edit_param = $post_edit_param . "&" . "post_id=" . (String)$_REQUEST["post_id"];
+    }
+
+    if (isset($_REQUEST["action"]))
+    {
+        $post_edit_param = $post_edit_param . "&" . "action=" . (String)$_REQUEST["action"];
+    }
+
+    return $post_edit_param;
 }
 
 ?>

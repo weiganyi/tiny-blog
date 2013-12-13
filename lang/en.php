@@ -58,18 +58,19 @@ $g_lang_text["sidebar_summary_comment"] = "Comment: ";
 $g_lang_text["sidebar_summary_email"] = "Email: ";
 
 /* tb_function.php */
-$g_lang_text["post_read"] = "Read";
-$g_lang_text["post_comment"] = "Comment";
-$g_lang_text["post_edit"] = "Edit";
-$g_lang_text["post_delete"] = "Delete";
-$g_lang_text["comment_delete"] = "Delete";
-$g_lang_text["comment_user"] = "user";
-$g_lang_text["comment_submit"] = "Submit";
+$g_lang_text["tb_func_uncategorized"] = "uncategorized";
+$g_lang_text["tb_func_post_read"] = "Read";
+$g_lang_text["tb_func_post_comment"] = "Comment";
+$g_lang_text["tb_func_post_edit"] = "Edit";
+$g_lang_text["tb_func_post_delete"] = "Delete";
+$g_lang_text["tb_func_comment_delete"] = "Delete";
+$g_lang_text["tb_func_comment_user"] = "user";
+$g_lang_text["tb_func_comment_submit"] = "Submit";
 
 /* post.php */
 $g_lang_text["post_view_head"] = "Article View";
-$g_lang_text["comment_view_head"] = "Comment View";
-$g_lang_text["comment_write_head"] = "Comment Write";
+$g_lang_text["post_comment_view_head"] = "Comment View";
+$g_lang_text["post_comment_write_head"] = "Comment Write";
 
 
 ?>
