@@ -44,6 +44,10 @@ elseif (is_ajax() == true)
         require_once(ROOTPATH . "$page.php");
     }
 }
+elseif (has_page("image") == true)
+{
+    require_once(ROOTPATH . "image.php");
+}
 else
 {
     //because the setcookie need be done before any html output, so do it in here

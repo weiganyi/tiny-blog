@@ -1536,7 +1536,7 @@ function make_comment_write()
     global $g_login;
     global $g_lang_text;
 
-    if (empty($g_db) || empty($g_cache) || empty($g_login) || empty($g_lang_text) || empty($g_lang_text))
+    if (empty($g_db) || empty($g_cache) || empty($g_login) || empty($g_lang_text))
     {
         echo "Error: make_comment_write() necessary params is null.";
         exit;
@@ -1660,6 +1660,8 @@ function get_post_content()
                 //the column 5 is post_content
                 $post_content = $post[5];
 
+                //escape all char " to the char '
+                $post_content = preg_replace("/\"/", "'", $post_content);
             }
         }
     }
@@ -1682,6 +1684,99 @@ function get_post_edit_param()
     }
 
     return $post_edit_param;
+}
+
+function save_uploaded_image()
+{
+    global $g_login;
+
+    if (empty($g_login))
+    {
+        exit;
+    }
+
+    $image_link_html = "";
+
+    $logined_user = $g_login->get_logined_user();
+    if (!empty($logined_user))
+    {
+        $file = $_FILES['me_host_image_menu_file'];
+    
+        if (!$file ||
+            $file['error'] > 0 ||
+            !is_uploaded_file($file['tmp_name']))
+        {
+            exit;
+        }
+
+        //prepare the save path for the image
+        $new_path = 'images';
+        if (!file_exists($new_path))
+        {
+            @ mkdir($new_path);
+        }
+
+        $new_path = $new_path . '/' . (String)$logined_user;
+        if (!file_exists($new_path))
+        {
+            @ mkdir($new_path);
+        }
+
+        //create the save name for the image
+        $matches = preg_split('/\./', $file['name']);
+        if (count($matches) == 2)
+        {
+            $new_name = (String)rand() . '.' . $matches[1];
+        }
+        else
+        {
+            $new_name = (String)rand();
+        }
+
+        //move the file from temp dir to the solute dir
+        $new_file = $new_path . '/' . $new_name;
+        if (!move_uploaded_file($file['tmp_name'], $new_file))
+        {
+            exit;
+        }
+
+        //change the permission for this file
+    	$stat = stat(dirname($new_file));
+    	$perms = $stat['mode'] & 0000777;
+    	@ chmod($new_file, $perms);
+
+    	$image_link_html = 'image_name=' . $file['name'] . '&image_src=' . $new_file;
+    }
+
+    return $image_link_html;
+}
+
+function del_uploaded_image()
+{
+    global $g_login;
+
+    if (empty($g_login))
+    {
+        exit;
+    }
+
+    $logined_user = $g_login->get_logined_user();
+    if (!empty($logined_user))
+    {
+        if ($_REQUEST["image_name"])
+        {
+            $image_name = $_REQUEST["image_name"];
+            $image_file = 'images' . '/' . (String)$logined_user. '/' . $image_name;
+            $image_file = ROOTPATH . $image_file;
+            if (file_exists($image_file))
+            {
+                //delete the image from the server
+                unlink ($image_file);
+            }
+        }
+    }
+
+    return;
 }
 
 ?>
