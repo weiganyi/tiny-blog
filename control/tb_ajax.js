@@ -14,7 +14,7 @@ function tb_ajax(url, callback_fn)
         if (req.readyState == 4 && req.status == 200)
         {
             var type = req.getResponseHeader("Content-Type");
-            if (type.indexOf("text/html") != -1 && req.responseText)
+            if (type.indexOf("text/html") != -1 && req.responseText && callback_fn)
             {
                 callback_fn(req.responseText);
             }

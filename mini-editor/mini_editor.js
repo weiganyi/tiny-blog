@@ -69,11 +69,13 @@ var TOOLBAR_HTML = " \
     <img src=\"images/hostimage.gif\"></img></a> \
 <table id=\"me_host_image_menu_table\"> \
     <tr class=\"me_host_image_menu_row\"> \
-        <iframe id=\"me_host_image_menu_frame\" name=\"me_host_image_menu_frame\"></iframe> \
-        <form method=\"post\" id=\"me_host_image_menu_form\" name=\"me_host_image_menu_form\" target=\"me_host_image_menu_frame\" enctype=\"multipart/form-data\" action=\"image.php\"> \
-            <td><input type=\"file\" id=\"me_host_image_menu_file\" name=\"me_host_image_menu_file\"></td> \
-            <td><input type=\"button\" id=\"me_host_image_menu_upload\" name=\"me_host_image_menu_upload\" value=\"Upload\"></td> \
-        </form> \
+        <td> \
+            <iframe id=\"me_host_image_menu_frame\" name=\"me_host_image_menu_frame\"></iframe> \
+            <form method=\"post\" id=\"me_host_image_menu_form\" name=\"me_host_image_menu_form\" target=\"me_host_image_menu_frame\" enctype=\"multipart/form-data\" action=\"image.php\"> \
+                <input type=\"file\" id=\"me_host_image_menu_file\" name=\"me_host_image_menu_file\"> \
+                <input type=\"button\" id=\"me_host_image_menu_upload\" name=\"me_host_image_menu_upload\" value=\"Upload\"> \
+            </form> \
+        </td> \
     </tr> \
 </table> \
 </span> \
@@ -859,7 +861,7 @@ jQuery.fn.mini_editor =
         {
             post_addr = post_addr + "?" + "image_name=" + image_base_name;
         }
-        post_addr = post_addr + "&" + "action=" + "add";
+        post_addr = post_addr + "&" + "action=" + "add_image";
         //add image name and timestamp to avoid submit repeadedly
         var now = new Date();
         post_addr = post_addr + "&" + "ts=" + now.getTime();
@@ -1017,7 +1019,7 @@ jQuery.fn.mini_editor =
                 {
                     del_url = del_url + "?" + "image_name=" + image_background_name;
                 }
-                del_url = del_url + "&" + "action=" + "delete";
+                del_url = del_url + "&" + "action=" + "del_image";
                 //add image name and timestamp to avoid submit repeadedly
                 var now = new Date();
                 del_url = del_url + "&" + "ts=" + now.getTime();

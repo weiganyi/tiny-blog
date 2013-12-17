@@ -179,21 +179,6 @@ class tb_db
         return $result;
     }
 
-    function get_tb_posts_by_post_id($post_id)
-    {
-        if (empty($this->db_control) || empty($post_id))
-        {
-            echo "Error: tb_db->get_tb_posts_by_post_id() necessary params is null.";
-            exit;
-        }
-
-        $query = "select * from tb_posts where post_id='$post_id'";
-
-        $result = $this->db_control->do_sql_query($query);
-
-        return $result;
-    }
-
     function get_tb_posts()
     {
         if (empty($this->db_control))
@@ -209,15 +194,30 @@ class tb_db
         return $result;
     }
 
-    function get_tb_posts_num_by_cat_id($category_id)
+    function get_tb_posts_by_order($field)
     {
-        if (empty($this->db_control))
+        if (empty($this->db_control) || empty($field))
         {
-            echo "Error: tb_db->get_tb_posts_num_by_cat_id() necessary params is null.";
+            echo "Error: tb_db->get_tb_posts_by_order() necessary params is null.";
             exit;
         }
 
-        $query = "select count(post_id) from tb_posts where category_id='$category_id'";
+        $query = "select * from tb_posts order by $field desc";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_posts_by_post_id($post_id)
+    {
+        if (empty($this->db_control) || empty($post_id))
+        {
+            echo "Error: tb_db->get_tb_posts_by_post_id() necessary params is null.";
+            exit;
+        }
+
+        $query = "select * from tb_posts where post_id='$post_id'";
 
         $result = $this->db_control->do_sql_query($query);
 
@@ -239,15 +239,30 @@ class tb_db
         return $result;
     }
 
-    function get_tb_posts_by_order($field)
+    function get_tb_posts_by_user_id_order($user_id, $field)
     {
         if (empty($this->db_control) || empty($field))
         {
-            echo "Error: tb_db->get_tb_posts_by_order() necessary params is null.";
+            echo "Error: tb_db->get_tb_posts_by_user_id_order() necessary params is null.";
             exit;
         }
 
-        $query = "select * from tb_posts order by $field desc";
+        $query = "select * from tb_posts where user_id='$user_id' order by $field desc";
+
+        $result = $this->db_control->do_sql_query($query);
+
+        return $result;
+    }
+
+    function get_tb_posts_num_by_cat_id($category_id)
+    {
+        if (empty($this->db_control))
+        {
+            echo "Error: tb_db->get_tb_posts_num_by_cat_id() necessary params is null.";
+            exit;
+        }
+
+        $query = "select count(post_id) from tb_posts where category_id='$category_id'";
 
         $result = $this->db_control->do_sql_query($query);
 

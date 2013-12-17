@@ -505,9 +505,9 @@ function make_reading_list()
         $num = $result["num"];
         $rows = $result["rows"];
 
-        //only list the top 10 posts
-        if ($num > 10)
-            $num = 10;
+        //only list the top 5 posts
+        if ($num > 5)
+            $num = 5;
 
         for ($idx=0; $idx<$num; $idx++)
         {
@@ -550,9 +550,9 @@ function make_comment_list()
         $num = $result["num"];
         $rows = $result["rows"];
 
-        //only list the top 10 comments
-        if ($num > 10)
-            $num = 10;
+        //only list the top 5 comments
+        if ($num > 5)
+            $num = 5;
 
         for ($idx=0; $idx<$num; $idx++)
         {
@@ -682,17 +682,85 @@ function do_post_delete($post_id)
     return;
 }
 
+function do_post_category_change($post_id, $cat_name)
+{
+    global $g_db;
+
+    if (empty($post_id) || empty($cat_name) || empty($g_db))
+    {
+        echo "Error: do_post_category_change() necessary params is null.";
+        exit;
+    }
+
+    $result = $g_db->get_tb_posts_by_post_id($post_id);
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        $post = $rows[0];
+
+        //the column 0 is post_id
+        $post_id = $post[0];
+        //the column 1 is user_id
+        $user_id = $post[1];
+        //the column 3 is post_date
+        $post_date = $post[3];
+        //the column 4 is post_title
+        $post_title = $post[4];
+        //the column 5 is post_content
+        $post_content = $post[5];
+        //the column 6 is read_number
+        $read_number = $post[6];
+
+        $result2 = $g_db->get_tb_categories_by_cat_name($cat_name);
+        if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
+        {
+            $num2 = $result2["num"];
+            $rows2 = $result2["rows"];
+
+            $category = $rows2[0];
+
+            //the column 0 is category_id
+            $category_id = $category[0];
+
+            $post_array = array("post_id"=>"$post_id", 
+                                "user_id"=>"$user_id", 
+                                "category_id"=>"$category_id", 
+                                "post_date"=>"$post_date", 
+                                "post_title"=>"$post_title", 
+                                "post_content"=>"$post_content", 
+                                "read_number"=>"$read_number");
+
+            //update the post
+            $g_db->insert_tb_posts($post_array);
+        }
+    }
+
+    return;
+}
+
 function do_post_list_action()
 {
     //delete the post
-    if (isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    if (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "del_post" && 
+        isset($_REQUEST["post_id"]))
     {
-        if ($_REQUEST["action"]=="delete")
-        {
-            $post_id = $_REQUEST["post_id"];
+        $post_id = $_REQUEST["post_id"];
 
-            do_post_delete($post_id);
-        }
+        do_post_delete($post_id);
+    }
+    //change the category
+    elseif (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "change_cat" && 
+        isset($_REQUEST["post_id"]) && 
+        isset($_REQUEST["cat_name"]))
+    {
+        $post_id = $_REQUEST["post_id"];
+        $cat_name = $_REQUEST["cat_name"];
+
+        do_post_category_change($post_id, $cat_name);
     }
 
     return;
@@ -703,8 +771,44 @@ function get_post_list_by_param()
     global $g_db;
     global $g_login;
 
+    if (empty($g_db) || empty($g_login))
+    {
+        echo "Error: get_post_list_by_param() necessary params is null.";
+        exit;
+    }
+
+    //search by page admin_post.php 
+    if (isset($_REQUEST["page"]) && $_REQUEST["page"]=="admin_post")
+    {
+        $logined_user = $g_login->get_logined_user();
+        if (!empty($logined_user))
+        {
+            $result = $g_db->get_tb_users_by_user_name($logined_user);
+            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+            {
+                $num = $result["num"];
+                $rows = $result["rows"];
+
+                $user = $rows[0];
+                //the column 0 is user_id
+                $user_id = $user[0];
+                //the column 5 is user_level
+                $user_level = $user[5];
+
+                //if user_level is admin, get all posts list
+                if ($user_level != "admin")
+                {
+                    $result2 = $g_db->get_tb_posts_by_user_id_order($user_id, "post_date");
+                    if (!empty($result2["num"]) && !empty($result2["rows"]))
+                    {
+                        return $result2;
+                    }
+                }
+            }
+        }
+    }
     //search by category name
-    if (isset($_REQUEST["cat"]))
+    elseif (isset($_REQUEST["cat"]))
     {
         $cat_name = $_REQUEST["cat"];
         $category_id = "0";
@@ -718,6 +822,7 @@ function get_post_list_by_param()
             $result = $g_db->get_tb_categories_by_cat_name($cat_name);
             if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
             {
+                $num = $result["num"];
                 $rows = $result["rows"];
                 $category = $rows[0];
                 //the column 0 is category_id
@@ -783,7 +888,7 @@ function get_post_list_by_param()
     return array();;
 }
 
-function make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id)
+function make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id, $cat_id)
 {
     global $g_lang_text;
     global $g_login;
@@ -820,14 +925,69 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
         }
     }
 
+    //if visit posts through the page admin_post, the posts that will be displayed should 
+    //belong to the logined_user, so we can add category setting for this post directly.
+    $can_set_cat = false;
+    if (isset($_REQUEST["page"]) && $_REQUEST["page"]=="admin_post")
+    {
+        $can_set_cat = true;
+        $result2 = $g_db->get_tb_categories();
+        if (!empty($result2["num"]) && !empty($result2["rows"]))
+        {
+            $num2 = $result2["num"];
+            $rows2 = $result2["rows"];
+        }
+    }
+
     if ($can_edit == true)
     {
-        $post_list = $post_list . 
-            "$post_date $user_name " . 
-            $g_lang_text["tb_func_post_read"]. "($read_number) " . 
-            $g_lang_text["tb_func_post_comment"]. "($comment_number) " . 
-            "<a href='index.php?page=new_post&post_id=$post_id&action=edit'>" . $g_lang_text["tb_func_post_edit"] . " </a>" . 
-            "<a href='index.php?post_id=$post_id&action=delete'>" . $g_lang_text["tb_func_post_delete"] . " </a>";
+        if ($can_set_cat == true)
+        {
+            $post_list = $post_list . 
+                "$post_date $user_name " . 
+                $g_lang_text["tb_func_post_read"]. "($read_number) " . 
+                $g_lang_text["tb_func_post_comment"]. "($comment_number) " . 
+                "<a href='index.php?action=edit_post&page=new_post&post_id=$post_id'>" . $g_lang_text["tb_func_post_edit"] . " </a>" . 
+                "<a href='index.php?action=del_post&post_id=$post_id'>" . $g_lang_text["tb_func_post_delete"] . " </a>";
+
+            //add categories setting
+            $post_list = $post_list . 
+                "<select onchange='category_change(this, \"post_id=$post_id\");'>" .
+                "<option value='uncategorized'>uncategorized</option>";
+
+            for ($idx=0; $idx<$num2; $idx++)
+            {
+                $cat = $rows2[$idx];
+
+                //the column 0 is category_id
+                $category_id = $cat[0];
+                //the column 1 is category_name
+                $category_name = $cat[1];
+
+                if ($cat_id == $category_id)
+                {
+                    $post_list = $post_list . 
+                        "<option value='$category_name' selected='selected'>$category_name</option>";
+                }
+                else
+                {
+                    $post_list = $post_list . 
+                        "<option value='$category_name'>$category_name</option>";
+                }
+            }
+
+            $post_list = $post_list . 
+                "</select>";
+        }
+        else
+        {
+            $post_list = $post_list . 
+                "$post_date $user_name " . 
+                $g_lang_text["tb_func_post_read"]. "($read_number) " . 
+                $g_lang_text["tb_func_post_comment"]. "($comment_number) " . 
+                "<a href='index.php?action=edit_post&page=new_post&post_id=$post_id'>" . $g_lang_text["tb_func_post_edit"] . " </a>" . 
+                "<a href='index.php?action=del_post&post_id=$post_id'>" . $g_lang_text["tb_func_post_delete"] . " </a>";
+        }
     }
     else
     {
@@ -887,6 +1047,8 @@ function make_post_list()
             $post_id = $post[0];
             //the column 1 is user_id
             $user_id = $post[1];
+            //the column 2 is category_id
+            $category_id = $post[2];
             //the column 3 is post_date
             $post_date = $post[3];
             //the column 4 is post_title
@@ -921,7 +1083,7 @@ function make_post_list()
                 $post_list = $post_list . "<div class='post_list_item_div_right'>";
 
                 $post_list = $post_list . 
-                    make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id);
+                    make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id, $category_id);
 
                 $post_list = $post_list . 
                     "</div>" . 
@@ -1061,6 +1223,8 @@ function make_post_title()
         $post_id = $post[0];
         //the column 1 is user_id
         $user_id = $post[1];
+        //the column 2 is category_id
+        $category_id = $post[2];
         //the column 3 is post_date
         $post_date = $post[3];
         //the column 4 is post_title
@@ -1099,7 +1263,7 @@ function make_post_title()
             $post_title_html = $post_title_html . "<div id='post_info_div'>";
 
             $post_title_html = $post_title_html . 
-                make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id);
+                make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id, $category_id);
 
             $post_title_html = $post_title_html . 
                 "</div>";
@@ -1274,17 +1438,20 @@ function do_post_edit($post_id, $post_title, $post_content)
 function do_post_action()
 {
     //delete the comment
-    if (isset($_REQUEST["comment_id"]) && isset($_REQUEST["action"]))
+    if (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "del_comment" && 
+        isset($_REQUEST["comment_id"]))
     {
-        if ($_REQUEST["action"]=="delete")
-        {
             $comment_id = $_REQUEST["comment_id"];
 
             do_comment_delete($comment_id);
-        }
     }
     //add the comment
-    elseif (isset($_REQUEST["post_id"]) && isset($_REQUEST["user_id"]) && isset($_REQUEST["content"]))
+    elseif (isset($_REQUEST["action"]) && 
+            $_REQUEST["action"] == "add_comment" && 
+            isset($_REQUEST["post_id"]) && 
+            isset($_REQUEST["user_id"]) && 
+            isset($_REQUEST["content"]))
     {
         $post_id = $_REQUEST["post_id"];
         $user_id = $_REQUEST["user_id"];
@@ -1293,8 +1460,10 @@ function do_post_action()
         do_comment_add($post_id, $user_id, $content);
     }
     //add the post
-    elseif (isset($_REQUEST["me_editor_title"]) && isset($_REQUEST["me_editor_content"])
-            && !isset($_REQUEST["post_id"]) && !isset($_REQUEST["action"]))
+    elseif (isset($_REQUEST["action"]) && 
+            $_REQUEST["action"] == "add_post" && 
+            isset($_REQUEST["me_editor_title"]) && 
+            isset($_REQUEST["me_editor_content"]))
     {
         $post_title = $_REQUEST["me_editor_title"];
         $post_content = $_REQUEST["me_editor_content"];
@@ -1302,17 +1471,17 @@ function do_post_action()
         do_post_add($post_title, $post_content);
     }
     //edit the post
-    elseif (isset($_REQUEST["me_editor_title"]) && isset($_REQUEST["me_editor_content"])
-            && isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    elseif (isset($_REQUEST["action"]) && 
+            $_REQUEST["action"] == "edit_post" && 
+            isset($_REQUEST["me_editor_title"]) && 
+            isset($_REQUEST["me_editor_content"]) &&
+            isset($_REQUEST["post_id"]))
     {
-        if ($_REQUEST["action"]=="edit")
-        {
-            $post_id = $_REQUEST["post_id"];
-            $post_title = $_REQUEST["me_editor_title"];
-            $post_content = $_REQUEST["me_editor_content"];
+        $post_id = $_REQUEST["post_id"];
+        $post_title = $_REQUEST["me_editor_title"];
+        $post_content = $_REQUEST["me_editor_content"];
 
-            do_post_edit($post_id, $post_title, $post_content);
-        }
+        do_post_edit($post_id, $post_title, $post_content);
     }
 
     return;
@@ -1372,7 +1541,9 @@ function do_post_read_inc($post_id)
 function do_post_read_action()
 {
     //calculate the read number for this page
-    if (isset($_REQUEST["page"]) && $_REQUEST["page"]=="post" && isset($_REQUEST["post_id"]))
+    if (isset($_REQUEST["page"]) && 
+        $_REQUEST["page"] == "post" && 
+        isset($_REQUEST["post_id"]))
     {
         if (!isset($_COOKIE["visit_post"]))
         {
@@ -1507,7 +1678,7 @@ function make_comment_content()
                 {
                     $comment_html = $comment_html . 
                         "$user_name $comment_date " . 
-                        "<a href='index.php?page=post&post_id=$post_id&comment_id=$comment_id&action=delete'>" . $g_lang_text["tb_func_comment_delete"] . " </a>";
+                        "<a href='index.php?action=del_comment&page=post&post_id=$post_id&comment_id=$comment_id'>" . $g_lang_text["tb_func_comment_delete"] . " </a>";
                 }
                 else
                 {
@@ -1578,7 +1749,7 @@ function make_comment_write()
             $g_lang_text["tb_func_comment_user"] . ": $user_name" . 
             "</div>";
 
-        $comment_html = $comment_html . "<form method='post' name='comment_write_form' action='index.php?page=post'>" . 
+        $comment_html = $comment_html . "<form method='post' name='comment_write_form' action='index.php?action=add_comment&page=post'>" . 
             "<input type='hidden' name='post_id' value='$post_id'>" . 
             "<input type='hidden' name='user_id' value='$user_id'>" . 
             "<textarea rows='10' cols='80' name='content'></textarea>" . 
@@ -1607,23 +1778,22 @@ function get_post_title()
     $post_title = "";
 
     //edit the post
-    if (isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    if (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"]=="edit_post" && 
+        isset($_REQUEST["post_id"]))
     {
-        if ($_REQUEST["action"]=="edit")
+        $post_id = $_REQUEST["post_id"];
+
+        $result = $g_db->get_tb_posts_by_post_id($post_id);
+        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
         {
-            $post_id = $_REQUEST["post_id"];
+            $num = $result["num"];
+            $rows = $result["rows"];
+            $post = $rows[0];
 
-            $result = $g_db->get_tb_posts_by_post_id($post_id);
-            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
-            {
-                $num = $result["num"];
-                $rows = $result["rows"];
-                $post = $rows[0];
+            //the column 4 is post_title
+            $post_title = $post[4];
 
-                //the column 4 is post_title
-                $post_title = $post[4];
-
-            }
         }
     }
 
@@ -1644,25 +1814,24 @@ function get_post_content()
     $post_content = "";
 
     //edit the post
-    if (isset($_REQUEST["post_id"]) && isset($_REQUEST["action"]))
+    if (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"]=="edit_post" && 
+        isset($_REQUEST["post_id"]))
     {
-        if ($_REQUEST["action"]=="edit")
+        $post_id = $_REQUEST["post_id"];
+
+        $result = $g_db->get_tb_posts_by_post_id($post_id);
+        if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
         {
-            $post_id = $_REQUEST["post_id"];
+            $num = $result["num"];
+            $rows = $result["rows"];
+            $post = $rows[0];
 
-            $result = $g_db->get_tb_posts_by_post_id($post_id);
-            if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
-            {
-                $num = $result["num"];
-                $rows = $result["rows"];
-                $post = $rows[0];
+            //the column 5 is post_content
+            $post_content = $post[5];
 
-                //the column 5 is post_content
-                $post_content = $post[5];
-
-                //escape all char " to the char '
-                $post_content = preg_replace("/\"/", "'", $post_content);
-            }
+            //escape all char " to the char '
+            $post_content = preg_replace("/\"/", "'", $post_content);
         }
     }
 
@@ -1678,15 +1847,21 @@ function get_post_edit_param()
         $post_edit_param = $post_edit_param . "&" . "post_id=" . (String)$_REQUEST["post_id"];
     }
 
+    //if current page has action, it should be edit post.
     if (isset($_REQUEST["action"]))
     {
         $post_edit_param = $post_edit_param . "&" . "action=" . (String)$_REQUEST["action"];
+    }
+    //if not, it should be add post.
+    else
+    {
+        $post_edit_param = $post_edit_param . "&" . "action=add_post";
     }
 
     return $post_edit_param;
 }
 
-function save_uploaded_image()
+function do_uploaded_image_save()
 {
     global $g_login;
 
@@ -1701,7 +1876,7 @@ function save_uploaded_image()
     if (!empty($logined_user))
     {
         $file = $_FILES['me_host_image_menu_file'];
-    
+
         if (!$file ||
             $file['error'] > 0 ||
             !is_uploaded_file($file['tmp_name']))
@@ -1751,7 +1926,7 @@ function save_uploaded_image()
     return $image_link_html;
 }
 
-function del_uploaded_image()
+function do_uploaded_image_del()
 {
     global $g_login;
 
@@ -1774,6 +1949,22 @@ function del_uploaded_image()
                 unlink ($image_file);
             }
         }
+    }
+
+    return;
+}
+
+function do_image_action()
+{
+    if (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "add_image")
+    {
+        echo do_uploaded_image_save();
+    }
+    elseif (isset($_REQUEST["action"]) && 
+            $_REQUEST["action"] == "del_image")
+    {
+        do_uploaded_image_del();
     }
 
     return;
