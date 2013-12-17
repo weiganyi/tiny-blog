@@ -29,6 +29,9 @@ class tb_login
 
     function login_init()
     {
+        //set cookie lifetime to 7 days
+        session_set_cookie_params(3600*24*7);
+
         session_start();
 
         //set default timezone
