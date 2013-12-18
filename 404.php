@@ -6,7 +6,7 @@
 	<link type="text/css" rel="stylesheet" href="blog.css"/>
 </head>
 <body>
-    <p><a href="index.php">404</a></p>
+    <div id="not_found_div">The page that you access isn't found.</p>
 </body>
 </html>
 

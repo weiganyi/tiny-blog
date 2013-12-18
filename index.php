@@ -53,21 +53,35 @@ else
     //because the setcookie need be done before any html output, so do it in here
     do_post_read_action();
 
-    require_once(ROOTPATH . "head.php");
-    require_once(ROOTPATH . "menu.php");
-    require_once(ROOTPATH . "sidebar.php");
-
     $page = get_page();
     if (!empty($page))
     {
-        require_once(ROOTPATH . "$page.php");
+        $page_file = $page . ".php";
+        if (!file_exists($page_file))
+        {
+            require_once(ROOTPATH . "404.php");
+        }
+        else
+        {
+            require_once(ROOTPATH . "head.php");
+            require_once(ROOTPATH . "menu.php");
+            require_once(ROOTPATH . "sidebar.php");
+
+            require_once(ROOTPATH . "$page.php");
+
+            require_once(ROOTPATH . "foot.php");
+        }
     }
     else
     {
-        require_once(ROOTPATH . "post_list.php");
-    }
+        require_once(ROOTPATH . "head.php");
+        require_once(ROOTPATH . "menu.php");
+        require_once(ROOTPATH . "sidebar.php");
 
-    require_once(ROOTPATH . "foot.php");
+        require_once(ROOTPATH . "post_list.php");
+
+        require_once(ROOTPATH . "foot.php");
+    }
 }
 
 ?>

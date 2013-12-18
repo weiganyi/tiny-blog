@@ -72,5 +72,13 @@ $g_lang_text["post_view_head"] = "Article View";
 $g_lang_text["post_comment_view_head"] = "Comment View";
 $g_lang_text["post_comment_write_head"] = "Comment Write";
 
+/* admin_category.php */
+$g_lang_text["admin_cat_head_cat"] = "Category Name";
+$g_lang_text["admin_cat_head_edit"] = "New Category Name";
+$g_lang_text["admin_cat_head_op"] = "Operate";
+$g_lang_text["admin_cat_edit"] = "Edit";
+$g_lang_text["admin_cat_delete"] = "Delete";
+$g_lang_text["admin_cat_add_cat"] = "Add Category Name: ";
+$g_lang_text["admin_cat_submit"] = "Submit";
 
 ?>

@@ -101,6 +101,9 @@ function make_management_menu()
                             <a href='index.php?page=admin_post'>" . $g_lang_text["menu_admin_post"] . "</a>
                         </li>
                         <li>
+                            <a href='index.php?page=admin_comment'>" . $g_lang_text["menu_admin_comment"] . "</a>
+                        </li>
+                        <li>
                             <a href='index.php?page=admin_config'>" . $g_lang_text["menu_admin_config"] . "</a>
                         </li>
                     </ul>
@@ -663,25 +666,6 @@ function get_page_posts()
     return $page_posts;
 }
 
-function do_post_delete($post_id)
-{
-    global $g_db;
-
-    if (empty($post_id) || empty($g_db))
-    {
-        echo "Error: do_post_delete() necessary params is null.";
-        exit;
-    }
-
-    //delete the post
-    $g_db->delete_tb_posts($post_id);
-
-    //delete the comment belong to this post
-    $g_db->delete_tb_comments_by_post_id($post_id);
-
-    return;
-}
-
 function do_post_category_change($post_id, $cat_name)
 {
     global $g_db;
@@ -723,36 +707,50 @@ function do_post_category_change($post_id, $cat_name)
 
             //the column 0 is category_id
             $category_id = $category[0];
-
-            $post_array = array("post_id"=>"$post_id", 
-                                "user_id"=>"$user_id", 
-                                "category_id"=>"$category_id", 
-                                "post_date"=>"$post_date", 
-                                "post_title"=>"$post_title", 
-                                "post_content"=>"$post_content", 
-                                "read_number"=>"$read_number");
-
-            //update the post
-            $g_db->insert_tb_posts($post_array);
         }
+        else
+        {
+            $category_id = 0;
+        }
+
+        $post_array = array("post_id"=>"$post_id", 
+                            "user_id"=>"$user_id", 
+                            "category_id"=>"$category_id", 
+                            "post_date"=>"$post_date", 
+                            "post_title"=>"$post_title", 
+                            "post_content"=>"$post_content", 
+                            "read_number"=>"$read_number");
+
+        //update the post
+        $g_db->insert_tb_posts($post_array);
     }
+
+    return;
+}
+
+function do_post_delete($post_id)
+{
+    global $g_db;
+
+    if (empty($post_id) || empty($g_db))
+    {
+        echo "Error: do_post_delete() necessary params is null.";
+        exit;
+    }
+
+    //delete the post
+    $g_db->delete_tb_posts($post_id);
+
+    //delete the comments belong to this post
+    $g_db->delete_tb_comments_by_post_id($post_id);
 
     return;
 }
 
 function do_post_list_action()
 {
-    //delete the post
-    if (isset($_REQUEST["action"]) && 
-        $_REQUEST["action"] == "del_post" && 
-        isset($_REQUEST["post_id"]))
-    {
-        $post_id = $_REQUEST["post_id"];
-
-        do_post_delete($post_id);
-    }
     //change the category
-    elseif (isset($_REQUEST["action"]) && 
+    if (isset($_REQUEST["action"]) && 
         $_REQUEST["action"] == "change_cat" && 
         isset($_REQUEST["post_id"]) && 
         isset($_REQUEST["cat_name"]))
@@ -761,6 +759,15 @@ function do_post_list_action()
         $cat_name = $_REQUEST["cat_name"];
 
         do_post_category_change($post_id, $cat_name);
+    }
+    //delete the post
+    elseif (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "del_post" && 
+        isset($_REQUEST["post_id"]))
+    {
+        $post_id = $_REQUEST["post_id"];
+
+        do_post_delete($post_id);
     }
 
     return;
@@ -778,7 +785,9 @@ function get_post_list_by_param()
     }
 
     //search by page admin_post.php 
-    if (isset($_REQUEST["page"]) && $_REQUEST["page"]=="admin_post")
+    if (isset($_REQUEST["page"]) && 
+        ($_REQUEST["page"]=="admin_post" || 
+        $_REQUEST["page"] == "admin_post_ajax"))
     {
         $logined_user = $g_login->get_logined_user();
         if (!empty($logined_user))
@@ -928,7 +937,9 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
     //if visit posts through the page admin_post, the posts that will be displayed should 
     //belong to the logined_user, so we can add category setting for this post directly.
     $can_set_cat = false;
-    if (isset($_REQUEST["page"]) && $_REQUEST["page"]=="admin_post")
+    if (isset($_REQUEST["page"]) && 
+        ($_REQUEST["page"]=="admin_post" || 
+        $_REQUEST["page"] == "admin_post_ajax"))
     {
         $can_set_cat = true;
         $result2 = $g_db->get_tb_categories();
@@ -1171,6 +1182,23 @@ function make_page_link()
     return $page_link_html;
 }
 
+function add_post_list_param()
+{
+    $post_list_param = "";
+
+    if (isset($_REQUEST["cat"]))
+    {
+        $post_list_param = $post_list_param . "&cat=" . $_REQUEST["cat"];
+    }
+
+    if (isset($_REQUEST["archive"]))
+    {
+        $post_list_param = $post_list_param . "&archive=" . $_REQUEST["archive"];
+    }
+
+    return $post_list_param;
+}
+
 function make_foot()
 {
     global $g_db;
@@ -1289,22 +1317,6 @@ function make_post_content()
     return $post_content;
 }
 
-function do_comment_delete($comment_id)
-{
-    global $g_db;
-
-    if (empty($comment_id) || empty($g_db))
-    {
-        echo "Error: do_comment_delete() necessary params is null.";
-        exit;
-    }
-
-    //delete the comment
-    $g_db->delete_tb_comments($comment_id);
-
-    return;
-}
-
 function do_comment_add($post_id, $user_id, $comment_content)
 {
     global $g_db;
@@ -1324,6 +1336,22 @@ function do_comment_add($post_id, $user_id, $comment_content)
 
     //add the comment
     $g_db->insert_tb_comments($comment_array);
+
+    return;
+}
+
+function do_comment_delete($comment_id)
+{
+    global $g_db;
+
+    if (empty($comment_id) || empty($g_db))
+    {
+        echo "Error: do_comment_delete() necessary params is null.";
+        exit;
+    }
+
+    //delete the comment
+    $g_db->delete_tb_comments($comment_id);
 
     return;
 }
@@ -1437,17 +1465,8 @@ function do_post_edit($post_id, $post_title, $post_content)
 
 function do_post_action()
 {
-    //delete the comment
-    if (isset($_REQUEST["action"]) && 
-        $_REQUEST["action"] == "del_comment" && 
-        isset($_REQUEST["comment_id"]))
-    {
-            $comment_id = $_REQUEST["comment_id"];
-
-            do_comment_delete($comment_id);
-    }
     //add the comment
-    elseif (isset($_REQUEST["action"]) && 
+    if (isset($_REQUEST["action"]) && 
             $_REQUEST["action"] == "add_comment" && 
             isset($_REQUEST["post_id"]) && 
             isset($_REQUEST["user_id"]) && 
@@ -1458,6 +1477,15 @@ function do_post_action()
         $content = $_REQUEST["content"];
 
         do_comment_add($post_id, $user_id, $content);
+    }
+    //delete the comment
+    elseif (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "del_comment" && 
+        isset($_REQUEST["comment_id"]))
+    {
+            $comment_id = $_REQUEST["comment_id"];
+
+            do_comment_delete($comment_id);
     }
     //add the post
     elseif (isset($_REQUEST["action"]) && 
@@ -1838,7 +1866,7 @@ function get_post_content()
     return $post_content;
 }
 
-function get_post_edit_param()
+function add_post_edit_param()
 {
     $post_edit_param = "";
 
@@ -1956,11 +1984,13 @@ function do_uploaded_image_del()
 
 function do_image_action()
 {
+    //uploaded the image
     if (isset($_REQUEST["action"]) && 
         $_REQUEST["action"] == "add_image")
     {
         echo do_uploaded_image_save();
     }
+    //delete the uploaded image
     elseif (isset($_REQUEST["action"]) && 
             $_REQUEST["action"] == "del_image")
     {
@@ -1968,6 +1998,232 @@ function do_image_action()
     }
 
     return;
+}
+
+function do_category_add($new_category_name)
+{
+    global $g_db;
+
+    if (empty($new_category_name) || empty($g_db))
+    {
+        echo "Error: do_category_add() necessary params is null.";
+        exit;
+    }
+
+    $category_id = 0;
+    $category_name = $new_category_name;
+
+    $category_array = array("category_id"=>"$category_id", 
+                        "category_name"=>"$category_name");
+
+    //insert the category
+    $g_db->insert_tb_categories($category_array);
+
+    return;
+}
+
+function do_category_edit($old_category_name, $new_category_name)
+{
+    global $g_db;
+
+    if (empty($old_category_name) || empty($new_category_name) || empty($g_db))
+    {
+        echo "Error: do_category_edit() necessary params is null.";
+        exit;
+    }
+
+    //modify the category name
+    $result = $g_db->get_tb_categories_by_cat_name($old_category_name);
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        $category = $rows[0];
+
+        //the column 0 is category_id
+        $category_id = $category[0];
+
+        $category_name = $new_category_name;
+
+        $category_array = array("category_id"=>"$category_id", 
+                            "category_name"=>"$category_name");
+
+        //update the category
+        $g_db->insert_tb_categories($category_array);
+    }
+
+    return;
+}
+
+function do_category_del($category_id)
+{
+    global $g_db;
+
+    if (empty($category_id) || empty($g_db))
+    {
+        echo "Error: do_category_del() necessary params is null.";
+        exit;
+    }
+
+    //delete the category
+    $g_db->delete_tb_categories($category_id);
+
+    //modify all posts that belong to this category
+    $result = $g_db->get_tb_posts_by_cat_id($category_id);
+    if (!empty($result["num"]) && !empty($result["rows"]))
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        for ($idx=0; $idx<$num; $idx++)
+        {
+            $post = $rows[$idx];
+
+            //the column 0 is post_id
+            $post_id = $post[0];
+            //the column 1 is user_id
+            $user_id = $post[1];
+            //the column 3 is post_date
+            $post_date = $post[3];
+            //the column 4 is post_title
+            $post_title = $post[4];
+            //the column 5 is post_content
+            $post_content = $post[5];
+            //the column 6 is read_number
+            $read_number = $post[6];
+
+            //set category_id to 0
+            $category_id = 0;
+
+            $post_array = array("post_id"=>"$post_id", 
+                                "user_id"=>"$user_id", 
+                                "category_id"=>"$category_id", 
+                                "post_date"=>"$post_date", 
+                                "post_title"=>"$post_title", 
+                                "post_content"=>"$post_content", 
+                                "read_number"=>"$read_number");
+
+            //update the post
+            $g_db->insert_tb_posts($post_array);
+        }
+    }
+
+    return;
+}
+
+function do_admin_action()
+{
+    //add or edit the categorys
+    if (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "edit_cat")
+    {
+        foreach ($_POST as $key => $value)
+        {
+            if ($key == "new_cat")
+            {
+                do_category_add($value);
+            }
+            else
+            {
+                if (!empty($value))
+                {
+                    do_category_edit($key, $value);
+                }
+            }
+        }
+    }
+    //delete the category
+    elseif (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "del_cat" && 
+        isset($_REQUEST["cat_id"]))
+    {
+        $category_id = $_REQUEST["cat_id"];
+
+        do_category_del($category_id);
+    }
+
+    return;
+}
+
+function make_category_edit_list()
+{
+    global $g_db;
+    global $g_cache;
+    global $g_login;
+    global $g_lang_text;
+
+    if (empty($g_db) || empty($g_cache) || empty($g_login) || empty($g_lang_text))
+    {
+        echo "Error: make_category_edit_list() necessary params is null.";
+        exit;
+    }
+
+    $cat_list_html = "<form method='post' name='cat_list_form' target='_self' action='index.php?action=edit_cat&page=admin_category'>" . 
+        "<table id='cat_list_table'>";
+
+    //add table head
+    $cat_list_html = $cat_list_html . 
+        "<tr class='cat_list_tr'>" . 
+            "<th id='cat_list_cat_name_th'>" . 
+                $g_lang_text["admin_cat_head_cat"] . 
+            "</th>" . 
+            "<th id='cat_list_cat_edit_th'>" . 
+                $g_lang_text["admin_cat_head_edit"] . 
+            "</th>" . 
+            "<th id='cat_list_cat_op_th'>" . 
+                $g_lang_text["admin_cat_head_op"] . 
+            "</th>" . 
+        "</tr>";
+
+    //add the category already existed into the table
+    $result = $g_db->get_tb_categories();
+    if (!empty($result["num"]) && !empty($result["rows"]))
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        for ($idx=0; $idx<$num; $idx++)
+        {
+            $category = $rows[$idx];
+
+            //the column 0 is category_id
+            $category_id = $category[0];
+            //the column 1 is category_name
+            $category_name = $category[1];
+
+            $cat_list_html = $cat_list_html . 
+                "<tr class='cat_list_tr'>" . 
+                    "<td class='cat_list_cat_name_td'>" . 
+                        $category_name . 
+                    "</td>" . 
+                    "<td class='cat_list_cat_edit_td'>" . 
+                        "<input type='text' name='$category_name' style='width:80%;display:none;'>" . 
+                    "</td>" . 
+                    "<td class='cat_list_cat_op_td'>" . 
+                        "<a href='#' onclick='category_edit(this);'>" . $g_lang_text["admin_cat_edit"] . " <a>" . 
+                        "<a href='index.php?action=del_cat&page=admin_category&cat_id=$category_id'>" . $g_lang_text["admin_cat_delete"] . "<a>" . 
+                    "</td>" . 
+                "</tr>";
+        }
+    }
+
+    //add the new category input
+    $cat_list_html = $cat_list_html . 
+        "</table>" . 
+            "<div id='cat_list_new_cat_div'>" . 
+                "<label>" . $g_lang_text["admin_cat_add_cat"] . "</label>" . 
+                "<input type='text' name='new_cat' style='width:30%;'>" . 
+            "</div>";
+
+    //add the submit button
+    $cat_list_html = $cat_list_html . 
+            "<div id='cat_list_submit_div'>" . 
+                "<input type='submit' value=" . $g_lang_text["admin_cat_submit"] . ">" . 
+            "</div>" . 
+        "</form>";
+
+    return $cat_list_html;
 }
 
 ?>

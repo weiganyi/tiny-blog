@@ -17,7 +17,7 @@
     {
         var post_addr = form_obj.attr("action");
 
-        post_addr = post_addr + "<?php echo get_post_edit_param(); ?>";
+        post_addr = post_addr + "<?php echo add_post_edit_param(); ?>";
 
         form_obj.attr("action", post_addr);
     }

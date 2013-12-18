@@ -2,17 +2,17 @@
     create by weiganyi on 20131203
 */
 
-function tb_add_event(obj, name, handler)
+function tb_add_event(node, name, handler)
 {
     //IE
-    if (obj.attachEvent)
+    if (node.attachEvent)
     {
-        obj.attachEvent("on" + name, handler);
+        node.attachEvent("on" + name, handler);
     }
     //chrome, firefox
-    else if (obj.addEventListener)
+    else if (node.addEventListener)
     {
-        obj.addEventListener(name, handler, false);
+        node.addEventListener(name, handler, false);
     }
 }
 
@@ -34,35 +34,35 @@ function tb_cancel_event(event)
     return false;
 }
 
-function tb_get_text_content(obj)
+function tb_get_text_content(node)
 {
     var broswer = navigator.userAgent;
 
     //IE
     if (broswer.search(/msie/gi) != -1)
     {
-        return obj.innerText;
+        return node.innerText;
     }
     //chrome, firefox
     else
     {
-        return obj.textContent;
+        return node.textContent;
     }
 }
 
-function tb_set_text_content(obj, text)
+function tb_set_text_content(node, text)
 {
     var broswer = navigator.userAgent;
 
     //IE
     if (broswer.search(/msie/gi) != -1)
     {
-        obj.innerText = text;
+        node.innerText = text;
     }
     //chrome, firefox
     else
     {
-        obj.textContent = text;
+        node.textContent = text;
     }
 
     return;
