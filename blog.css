@@ -683,3 +683,157 @@
 	text-align: center;
 }
 
+/* admin_comment.php style */
+#comment_list_div
+{
+	float: right;
+	width: 71%;
+
+    border-collapse: collapse;
+    border-style: solid;
+	border-width: 1px;
+	border-color: #808080;      /* hui se */
+
+	margin: 10px;
+	padding: 10px;
+}
+
+#comment_list_table
+{
+	padding: 5px;
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 100%;
+}
+
+.comment_list_tr
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 100%;
+}
+
+#comment_list_content_th
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 60%;
+    background-color: #DCDCDC;          /* dan hui se */
+}
+
+#comment_list_user_th
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+	text-align: center;
+    width: 10%;
+    background-color: #DCDCDC;          /* dan hui se */
+}
+
+#comment_list_date_th
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+	text-align: center;
+    width: 20%;
+    background-color: #DCDCDC;          /* dan hui se */
+}
+
+#comment_list_op_th
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+	text-align: center;
+    width: 10%;
+    background-color: #DCDCDC;          /* dan hui se */
+}
+
+.comment_list_content_span
+{
+	color: #696969;             /* shen hui se */
+}
+
+.comment_list_content_td
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 60%;
+}
+
+.comment_list_user_td
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+	text-align: center;
+    width: 10%;
+}
+
+.comment_list_date_th
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+	text-align: center;
+    width: 20%;
+}
+
+.comment_list_op_td
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+	text-align: center;
+    width: 10%;
+}
+
+.comment_list_content_td a:link, .comment_list_op_td a:link
+{
+	color: black;
+	text-decoration: none;
+}
+
+.comment_list_content_td a:visited, .comment_list_op_td a:visited
+{
+	color: black;
+}
+
+.comment_list_content_td a:hover, .comment_list_op_td a:hover
+{
+	color: black;
+	text-decoration: underline;
+}
+
+.comment_list_content_td a:active, .comment_list_op_td a:active
+{
+	color: black;
+}
+

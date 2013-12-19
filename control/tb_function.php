@@ -355,7 +355,7 @@ function make_category_list()
         exit;
     }
 
-    $category_list = "";
+    $category_list_html = "";
 
     $result = $g_db->get_tb_categories();
     if (!empty($result["num"]) && !empty($result["rows"]))
@@ -378,7 +378,7 @@ function make_category_list()
                     $rows2 = $result2["rows"];
                     $post_number = $rows2[0][0];
 
-                    $category_list = $category_list . 
+                    $category_list_html = $category_list_html . 
                                     "<a href='index.php?cat=$category_name'>$category[1]</a>" .
                                     " ($post_number)" . 
                                     "</br>";
@@ -394,13 +394,13 @@ function make_category_list()
         $rows3 = $result3["rows"];
         $post_number = $rows3[0][0];
 
-        $category_list = $category_list . 
+        $category_list_html = $category_list_html . 
                         "<a href='index.php?cat=uncategorized'>". $g_lang_text["tb_func_uncategorized"] . "</a>" .
                         " ($post_number)" . 
                         "</br>";
     }
 
-    return $category_list;
+    return $category_list_html;
 }
 
 function make_archive_list()
@@ -413,7 +413,7 @@ function make_archive_list()
         exit;
     }
 
-    $archive_list = "";
+    $archive_list_html = "";
 
     $result = $g_db->get_tb_posts_by_order("post_date");
     if (!empty($result["num"]) && !empty($result["rows"]))
@@ -480,14 +480,14 @@ function make_archive_list()
         //split join the archive list
         foreach ($post_archive as $post_date=>$post_number)
         {
-            $archive_list = $archive_list . 
+            $archive_list_html = $archive_list_html . 
                             "<a href='index.php?archive=$post_date'>$post_date</a>" .
                             " ($post_number)" . 
                             "</br>";
         }
     }
 
-    return $archive_list;
+    return $archive_list_html;
 }
 
 function make_reading_list()
@@ -500,7 +500,7 @@ function make_reading_list()
         exit;
     }
 
-    $reading_list = "";
+    $reading_list_html = "";
 
     $result = $g_db->get_tb_posts_by_order("read_number");
     if (!empty($result["num"]) && !empty($result["rows"]))
@@ -525,14 +525,14 @@ function make_reading_list()
 
             $post_title = substr($post_title, 0, 20);
 
-            $reading_list = $reading_list . 
+            $reading_list_html = $reading_list_html . 
                             "<a href='index.php?page=post&post_id=$post_id'>$post_title</a>" .
                             "<span class='sidebar_content_right_span'>($read_number)</span>" . 
                             "</br>";
         }
     }
 
-    return $reading_list;
+    return $reading_list_html;
 }
 
 function make_comment_list()
@@ -545,7 +545,7 @@ function make_comment_list()
         exit;
     }
 
-    $comment_list = "";
+    $comment_list_html = "";
 
     $result = $g_db->get_tb_comments_by_order("comment_date");
     if (!empty($result["num"]) && !empty($result["rows"]))
@@ -594,7 +594,7 @@ function make_comment_list()
                     $comment_content = $user_name. ": " . $comment_content;
                     $comment_content = substr($comment_content, 0, 20);
 
-                    $comment_list = $comment_list . 
+                    $comment_list_html = $comment_list_html . 
                                     "<a href='index.php?page=post&post_id=$post_id'>$post_title</a>" .
                                     "</br>" .
                                     "<span id='sidebar_comment_span'>$comment_content</span>" . 
@@ -604,7 +604,7 @@ function make_comment_list()
         }
     }
 
-    return $comment_list;
+    return $comment_list_html;
 }
 
 function has_page($page)
@@ -909,7 +909,7 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
         exit;
     }
 
-    $post_list = "";
+    $post_info_html = "";
 
     //if the logined user is the user of this post, or is the admin
     //it should add edit or delete link for this post
@@ -954,7 +954,7 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
     {
         if ($can_set_cat == true)
         {
-            $post_list = $post_list . 
+            $post_info_html = $post_info_html . 
                 "$post_date $user_name " . 
                 $g_lang_text["tb_func_post_read"]. "($read_number) " . 
                 $g_lang_text["tb_func_post_comment"]. "($comment_number) " . 
@@ -962,7 +962,7 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
                 "<a href='index.php?action=del_post&post_id=$post_id'>" . $g_lang_text["tb_func_post_delete"] . " </a>";
 
             //add categories setting
-            $post_list = $post_list . 
+            $post_info_html = $post_info_html . 
                 "<select onchange='category_change(this, \"post_id=$post_id\");'>" .
                 "<option value='uncategorized'>uncategorized</option>";
 
@@ -977,22 +977,22 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
 
                 if ($cat_id == $category_id)
                 {
-                    $post_list = $post_list . 
+                    $post_info_html = $post_info_html . 
                         "<option value='$category_name' selected='selected'>$category_name</option>";
                 }
                 else
                 {
-                    $post_list = $post_list . 
+                    $post_info_html = $post_info_html . 
                         "<option value='$category_name'>$category_name</option>";
                 }
             }
 
-            $post_list = $post_list . 
+            $post_info_html = $post_info_html . 
                 "</select>";
         }
         else
         {
-            $post_list = $post_list . 
+            $post_info_html = $post_info_html . 
                 "$post_date $user_name " . 
                 $g_lang_text["tb_func_post_read"]. "($read_number) " . 
                 $g_lang_text["tb_func_post_comment"]. "($comment_number) " . 
@@ -1002,13 +1002,13 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
     }
     else
     {
-        $post_list = $post_list . 
+        $post_info_html = $post_info_html . 
             "$post_date $user_name " . 
             $g_lang_text["tb_func_post_read"]. "($read_number) " . 
             $g_lang_text["tb_func_post_comment"]. "($comment_number)";
     }
 
-    return $post_list;
+    return $post_info_html;
 }
 
 function make_post_list()
@@ -1023,9 +1023,10 @@ function make_post_list()
         exit;
     }
 
+    //get the post number can be displayed in one page
     $page_posts = $g_cache->get_cache("tb_options_page_posts", "get_page_posts");
 
-    $post_list = "";
+    $post_list_html = "";
 
     $result = get_post_list_by_param();
     if (!empty($result["num"]) && !empty($result["rows"]) && !empty($page_posts))
@@ -1087,23 +1088,23 @@ function make_post_list()
                 //the column 1 is user_name
                 $user_name = $user3[1];
 
-                $post_list = $post_list . 
+                $post_list_html = $post_list_html . 
                     "<div class='post_list_item_div'>" . 
                     "<div class='post_list_item_div_left'><a href='index.php?page=post&post_id=$post_id'>$post_title</a></div>";
 
-                $post_list = $post_list . "<div class='post_list_item_div_right'>";
+                $post_list_html = $post_list_html . "<div class='post_list_item_div_right'>";
 
-                $post_list = $post_list . 
+                $post_list_html = $post_list_html . 
                     make_post_info($user_name, $post_date, $read_number, $comment_number, $post_id, $category_id);
 
-                $post_list = $post_list . 
+                $post_list_html = $post_list_html . 
                     "</div>" . 
                     "</div>";
             }
         }
     }
 
-    return $post_list;
+    return $post_list_html;
 }
 
 function make_page_link()
@@ -1116,10 +1117,12 @@ function make_page_link()
         exit;
     }
 
+    //get the post number can be displayed in one page
     $page_posts = $g_cache->get_cache("tb_options_page_posts", "get_page_posts");
 
     $page_link_html = "";
 
+    //get the number of posts
     $num = $g_cache->get_cache("post_list_num", NULL);
     if (!empty($num) && !empty($page_posts))
     {
@@ -2112,6 +2115,22 @@ function do_category_del($category_id)
     return;
 }
 
+function do_commment_del($comment_id)
+{
+    global $g_db;
+
+    if (empty($comment_id) || empty($g_db))
+    {
+        echo "Error: do_commment_del() necessary params is null.";
+        exit;
+    }
+
+    //delete the comment
+    $g_db->delete_tb_comments($comment_id);
+
+    return;
+}
+
 function do_admin_action()
 {
     //add or edit the categorys
@@ -2141,6 +2160,15 @@ function do_admin_action()
         $category_id = $_REQUEST["cat_id"];
 
         do_category_del($category_id);
+    }
+    //delete the comment
+    elseif (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "del_comment" && 
+        isset($_REQUEST["comment_id"]))
+    {
+        $comment_id = $_REQUEST["comment_id"];
+
+        do_commment_del($comment_id);
     }
 
     return;
@@ -2224,6 +2252,129 @@ function make_category_edit_list()
         "</form>";
 
     return $cat_list_html;
+}
+
+function make_comment_edit_list()
+{
+    global $g_db;
+    global $g_cache;
+    global $g_login;
+    global $g_lang_text;
+
+    if (empty($g_db) || empty($g_cache) || empty($g_login) || empty($g_lang_text))
+    {
+        echo "Error: make_comment_edit_list() necessary params is null.";
+        exit;
+    }
+
+    //get the comment number can be displayed in one page
+    $page_comments = $g_cache->get_cache("tb_options_page_posts", "get_page_posts");
+
+    $comment_list_html = "<table id='comment_list_table'>";
+
+    //add table head
+    $comment_list_html = $comment_list_html . 
+        "<tr class='comment_list_tr'>" . 
+            "<th id='comment_list_content_th'>" . 
+                $g_lang_text["admin_comment_head_content"] . 
+            "</th>" . 
+            "<th id='comment_list_user_th'>" . 
+                $g_lang_text["admin_comment_head_user"] . 
+            "</th>" . 
+            "<th id='comment_list_date_th'>" . 
+                $g_lang_text["admin_comment_head_date"] . 
+            "</th>" . 
+            "<th id='comment_list_op_th'>" . 
+                $g_lang_text["admin_comment_head_op"] . 
+            "</th>" . 
+        "</tr>";
+
+    //add the comments already existed into the table
+    $result = $g_db->get_tb_comments_by_order("comment_date");
+    if (!empty($result["num"]) && !empty($result["rows"]))
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        //store the number of comments
+        $g_cache->set_cache("post_list_num", $num);
+
+        //calculate the start of the comment number that should be displayed
+        $start = 0;
+        if (isset($_REQUEST["pn"]))
+        {
+            $start = ($_REQUEST["pn"]-1) * $page_comments;
+        }
+
+        //calculate the end of the comment number that should be displayed
+        $end = $start + $page_comments;
+        if ($end > $num)
+        {
+            $end = $num;
+        }
+
+        for ($idx=$start; $idx<$end; $idx++)
+        {
+            $comment = $rows[$idx];
+
+            //the column 0 is comment_id
+            $comment_id = $comment[0];
+            //the column 1 is post_id
+            $post_id = $comment[1];
+            //the column 2 is user_id
+            $user_id = $comment[2];
+            //the column 3 is comment_date
+            $comment_date = $comment[3];
+            //the column 4 is comment_content
+            $comment_content = $comment[4];
+
+            $result2 = $g_db->get_tb_posts_by_post_id($post_id);
+            if (!empty($result2["num"]) && !empty($result2["rows"]) && $result2["num"]==1)
+            {
+                $num2 = $result2["num"];
+                $rows2 = $result2["rows"];
+                $post = $rows2[0];
+
+                //the column 4 is post_title
+                $post_title = $post[4];
+
+                $result3 = $g_db->get_tb_users_by_user_id($user_id);
+                if (!empty($result3["num"]) && !empty($result3["rows"]) && $result3["num"]==1)
+                {
+                    $num3 = $result3["num"];
+                    $rows3 = $result3["rows"];
+                    $user = $rows3[0];
+
+                    //the column 1 is user_name
+                    $user_name = $user[1];
+
+                    $comment_list_html = $comment_list_html . 
+                        "<tr class='comment_list_tr'>" . 
+                            "<td class='comment_list_content_td'>" . 
+                                "RE: <a href='index.php?page=post&post_id=$post_id'>$post_title</a>" .
+                                "</br>" .
+                                "<span class='comment_list_content_span'>$comment_content</span>" . 
+                                "</br>" . 
+                            "</td>" . 
+                            "<td class='comment_list_user_td'>" . 
+                                $user_name . 
+                            "</td>" . 
+                            "<td class='comment_list_date_th'>" . 
+                                $comment_date . 
+                            "</td>" . 
+                            "<td class='comment_list_op_td'>" . 
+                                "<a href='index.php?action=del_comment&page=admin_comment&comment_id=$comment_id'>" . $g_lang_text["admin_comment_delete"] . "<a>" . 
+                            "</td>" . 
+                        "</tr>";
+                }
+            }
+        }
+    }
+
+    $comment_list_html = $comment_list_html . 
+        "</table>";
+
+    return $comment_list_html;
 }
 
 ?>

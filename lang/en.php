@@ -81,4 +81,11 @@ $g_lang_text["admin_cat_delete"] = "Delete";
 $g_lang_text["admin_cat_add_cat"] = "Add Category Name: ";
 $g_lang_text["admin_cat_submit"] = "Submit";
 
+/* admin_comment.php */
+$g_lang_text["admin_comment_head_content"] = "Comment Content";
+$g_lang_text["admin_comment_head_user"] = "User";
+$g_lang_text["admin_comment_head_date"] = "Date";
+$g_lang_text["admin_comment_head_op"] = "Operate";
+$g_lang_text["admin_comment_delete"] = "Delete";
+
 ?>
