@@ -22,7 +22,7 @@
         form_obj.attr("action", post_addr);
     }
 
-    $("#editor").mini_editor_create({lang:"en", 
+    $("#editor").mini_editor_create({lang:"<?php echo get_language(); ?>", 
                                 base_url:"mini-editor",
                                 image_page:"index.php?page=image",
                                 text_page:"index.php?page=post",

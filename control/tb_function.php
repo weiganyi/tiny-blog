@@ -952,7 +952,7 @@ function make_post_info($user_name, $post_date, $read_number, $comment_number, $
             //add categories setting
             $post_info_html = $post_info_html . 
                 "<select onchange='category_change(this, \"post_id=$post_id\");'>" .
-                "<option value='uncategorized'>uncategorized</option>";
+                "<option value='uncategorized'>" . $g_lang_text['tb_func_uncategorized'] . "</option>";
 
             for ($idx=0; $idx<$num2; $idx++)
             {
@@ -2003,10 +2003,10 @@ function do_category_add($new_category_name)
 
     $category_id = 0;
     $category_name = $new_category_name;
-
+	
     $category_array = array("category_id"=>"$category_id", 
                         "category_name"=>"$category_name");
-
+	
     //insert the category
     $g_db->insert_tb_categories($category_array);
 
@@ -2168,7 +2168,10 @@ function do_admin_action()
         {
             if ($key == "new_cat")
             {
-                do_category_add($value);
+            	if (!empty($value))
+            	{
+                	do_category_add($value);
+            	}
             }
             else
             {

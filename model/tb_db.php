@@ -94,6 +94,9 @@ class tb_db_mysql
 
         $rows = array();
 
+        //set mysql connect code to utf8
+        mysqli_query($this->db_handler, 'set names utf8');
+
         //do the sql query
         $result = mysqli_query($this->db_handler, $query);
 
@@ -120,6 +123,9 @@ class tb_db_mysql
             echo "Error: tb_db_mysql->do_sql_query_without_result() necessary params is null.";
             exit;
         }
+
+        //set mysql connect code to utf8
+        mysqli_query($this->db_handler, 'set names utf8');
 
         //do the sql query
         $result = mysqli_query($this->db_handler, $query);
