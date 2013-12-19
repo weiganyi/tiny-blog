@@ -195,9 +195,7 @@ function get_bloger_name()
         $name = $rows[0][2];
     }
 
-    $name_html = "<span class='sidebar_content_right_span'>$name</span>";
-
-    return $name_html;
+    return $name;
 }
 
 function get_user_registered()
@@ -225,9 +223,7 @@ function get_user_registered()
         $user_registered = substr($user_registered, 0, 10);
     }
 
-    $user_registered_html = "<span class='sidebar_content_right_span'>$user_registered</span>";
-
-    return $user_registered_html;
+    return $user_registered;
 }
 
 function get_posts_number()
@@ -249,9 +245,7 @@ function get_posts_number()
         $posts_number = (String)$num;
     }
 
-    $posts_number_html = "<span class='sidebar_content_right_span'>$posts_number</span>";
-
-    return $posts_number_html;
+    return $posts_number;
 }
 
 function get_read_number()
@@ -284,9 +278,7 @@ function get_read_number()
         $read_number = (String)$read_number;
     }
 
-    $read_number_html = "<span class='sidebar_content_right_span'>$read_number</span>";
-
-    return $read_number_html;
+    return $read_number;
 }
 
 function get_comment_number()
@@ -310,9 +302,7 @@ function get_comment_number()
         $comment_number = (String)$num;
     }
 
-    $comment_number_html = "<span class='sidebar_content_right_span'>$comment_number</span>";
-
-    return $comment_number_html;
+    return $comment_number;
 }
 
 function get_user_email()
@@ -339,9 +329,7 @@ function get_user_email()
         $user_email = $user[4];
     }
 
-    $user_email_html = "<span class='sidebar_content_right_span'>$user_email</span>";
-
-    return $user_email_html;
+    return $user_email;
 }
 
 function make_category_list()
@@ -1202,13 +1190,13 @@ function add_post_list_param()
     return $post_list_param;
 }
 
-function make_foot()
+function get_foot_text()
 {
     global $g_db;
 
     if (empty($g_db))
     {
-        echo "Error: make_foot() necessary params is null.";
+        echo "Error: get_foot_text() necessary params is null.";
         exit;
     }
 
@@ -2131,6 +2119,45 @@ function do_commment_del($comment_id)
     return;
 }
 
+function do_option_edit($option_name, $new_option_value)
+{
+    global $g_db;
+
+    if (empty($option_name) || empty($g_db))
+    {
+        echo "Error: do_option_edit() necessary params is null.";
+        exit;
+    }
+
+    //modify the option
+    $result = $g_db->get_tb_options_by_option_name($option_name);
+    if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    {
+        $num = $result["num"];
+        $rows = $result["rows"];
+
+        $config = $rows[0];
+
+        //the column 0 is option_id
+        $option_id = $config[0];
+        //the column 2 is option_value
+        $option_value = $config[2];
+        if ($new_option_value != $option_value)
+        {
+            $option_value = $new_option_value;
+
+            $option_array = array("option_id"=>"$option_id", 
+                                "option_name"=>"$option_name",
+                                "option_value"=>"$option_value");
+
+            //update the option
+            $g_db->insert_tb_options($option_array);
+        }
+    }
+
+    return;
+}
+
 function do_admin_action()
 {
     //add or edit the categorys
@@ -2169,6 +2196,15 @@ function do_admin_action()
         $comment_id = $_REQUEST["comment_id"];
 
         do_commment_del($comment_id);
+    }
+    //edit the option
+    elseif (isset($_REQUEST["action"]) && 
+        $_REQUEST["action"] == "edit_option")
+    {
+        foreach ($_POST as $key => $value)
+        {
+            do_option_edit($key, $value);
+        }
     }
 
     return;

@@ -7,14 +7,36 @@
     <div class="sidebar_frame_div">
         <div class="sidebar_title_div"><?php echo $g_lang_text["sidebar_summary_title"]; ?></div>
         <div class="sidebar_content_div">
-            <?php
-                echo $g_lang_text["sidebar_summary_bloger"].get_bloger_name()."</br>";
-                echo $g_lang_text["sidebar_summary_register"].get_user_registered()."</br>";
-                echo $g_lang_text["sidebar_summary_posts"].get_posts_number()."</br>";
-                echo $g_lang_text["sidebar_summary_read"].get_read_number()."</br>";
-                echo $g_lang_text["sidebar_summary_comment"].get_comment_number()."</br>";
-                echo $g_lang_text["sidebar_summary_email"].get_user_email()."</br>";
-            ?>
+            <?php echo $g_lang_text["sidebar_summary_bloger"]; ?>
+            <span class="sidebar_content_right_span">
+                <?php echo get_bloger_name(); ?>
+            </span>
+            </br>
+            <?php echo $g_lang_text["sidebar_summary_register"]; ?>
+            <span class="sidebar_content_right_span">
+                <?php echo get_user_registered(); ?>
+            </span>
+            </br>
+            <?php echo $g_lang_text["sidebar_summary_posts"]; ?>
+            <span class="sidebar_content_right_span">
+                <?php echo get_posts_number(); ?>
+            </span>
+            </br>
+            <?php echo $g_lang_text["sidebar_summary_read"]; ?>
+            <span class="sidebar_content_right_span">
+                <?php echo get_read_number(); ?>
+            </span>
+            </br>
+            <?php echo $g_lang_text["sidebar_summary_comment"]; ?>
+            <span class="sidebar_content_right_span">
+                <?php echo get_comment_number(); ?>
+            </span>
+            </br>
+            <?php echo $g_lang_text["sidebar_summary_email"]; ?>
+            <span class="sidebar_content_right_span">
+                <?php echo get_user_email(); ?>
+            </span>
+            </br>
         </div>
     </div>
     <div class="sidebar_frame_div">

@@ -88,4 +88,13 @@ $g_lang_text["admin_comment_head_date"] = "Date";
 $g_lang_text["admin_comment_head_op"] = "Operate";
 $g_lang_text["admin_comment_delete"] = "Delete";
 
+/* admin_config.php */
+$g_lang_text["admin_config_language"] = "Language";
+$g_lang_text["admin_config_blog_name"] = "Blog Name";
+$g_lang_text["admin_config_blog_notice"] = "Blog Notice";
+$g_lang_text["admin_config_bloger_name"] = "Bloger Name";
+$g_lang_text["admin_config_page_posts"] = "Post Number in a Page";
+$g_lang_text["admin_config_foot_text"] = "Foot Text";
+$g_lang_text["admin_config_submit"] = "Submit";
+
 ?>

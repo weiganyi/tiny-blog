@@ -837,3 +837,84 @@
 	color: black;
 }
 
+/* admin_config.php style */
+#config_div
+{
+	float: right;
+	width: 71%;
+
+    border-collapse: collapse;
+    border-style: solid;
+	border-width: 1px;
+	border-color: #808080;      /* hui se */
+
+	margin: 10px;
+	padding: 10px;
+}
+
+#config_table
+{
+	padding: 5px;
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 100%;
+}
+
+.config_tr
+{
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 100%;
+}
+
+.config_label_td
+{
+	text-align: right;
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 30%;
+}
+
+.config_input_td
+{
+	text-align: left;
+
+    border-collapse: collapse;
+    border-style: dotted;
+	border-width: 1px;
+	border-color: #696969;             /* shen hui se */
+
+    width: 70%;
+}
+
+.config_option_short_input
+{
+    width:10%
+}
+
+.config_option_middle_input
+{
+    width:50%
+}
+
+.config_option_long_input
+{
+    width:90%
+}
+
+#config_submit_td
+{
+    text-align: center;
+}
+

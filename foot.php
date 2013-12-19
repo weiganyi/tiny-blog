@@ -1,6 +1,6 @@
 
 <div id="foot_div">
-    <?php echo make_foot(); ?>
+    <?php echo get_foot_text(); ?>
 </div>
 
 </div>

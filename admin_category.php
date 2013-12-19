@@ -1,4 +1,10 @@
 
+<?php do_admin_action(); ?>
+
+<div id='cat_list_div'>
+    <?php echo make_category_edit_list(); ?>
+</div>
+
 <script type="text/javascript">
     function category_edit(node)
     {
@@ -26,10 +32,4 @@
         return;
     }
 </script>
-
-<?php do_admin_action(); ?>
-
-<div id='cat_list_div'>
-    <?php echo make_category_edit_list(); ?>
-</div>
 
