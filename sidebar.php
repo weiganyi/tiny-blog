@@ -34,7 +34,7 @@
             </br>
             <?php echo $g_lang_text["sidebar_summary_email"]; ?>
             <span class="sidebar_content_right_span">
-                <?php echo get_user_email(); ?>
+                <?php echo get_admin_email(); ?>
             </span>
             </br>
         </div>

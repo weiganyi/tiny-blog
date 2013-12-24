@@ -89,6 +89,8 @@ $g_lang_text["admin_comment_head_op"] = "Operate";
 $g_lang_text["admin_comment_delete"] = "Delete";
 
 /* admin_config.php */
+$g_lang_text["admin_config_password"] = "New Password";
+$g_lang_text["admin_config_email"] = "New Email";
 $g_lang_text["admin_config_language"] = "Language";
 $g_lang_text["admin_config_blog_name"] = "Blog Name";
 $g_lang_text["admin_config_blog_notice"] = "Blog Notice";

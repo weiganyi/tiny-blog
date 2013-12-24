@@ -89,6 +89,8 @@ $g_lang_text["admin_comment_head_op"] = "操作";
 $g_lang_text["admin_comment_delete"] = "删除";
 
 /* admin_config.php */
+$g_lang_text["admin_config_password"] = "新密码";
+$g_lang_text["admin_config_email"] = "新邮箱地址";
 $g_lang_text["admin_config_language"] = "语言";
 $g_lang_text["admin_config_blog_name"] = "博客名";
 $g_lang_text["admin_config_blog_notice"] = "博客公告";

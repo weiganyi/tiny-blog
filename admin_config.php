@@ -6,6 +6,22 @@
         <table id="config_table">
             <tr class="config_tr">
                 <td class="config_label_td">
+                    <?php echo $g_lang_text["admin_config_password"].": "; ?>
+                </td>
+                <td class="config_input_td">
+                    <input type="text" class="config_option_middle_input" name="user_password" value="<?php echo get_user_passwd(); ?>">
+                </td>
+            </tr>
+            <tr class="config_tr">
+                <td class="config_label_td">
+                    <?php echo $g_lang_text["admin_config_email"].": "; ?>
+                </td>
+                <td class="config_input_td">
+                    <input type="text" class="config_option_middle_input" name="user_email" value="<?php echo get_user_email(); ?>">
+                </td>
+            </tr>
+        	<tr class="config_tr">
+                <td class="config_label_td">
                     <?php echo $g_lang_text["admin_config_language"].": "; ?>
                 </td>
                 <td class="config_input_td">

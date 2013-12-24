@@ -305,13 +305,13 @@ function get_comment_number()
     return $comment_number;
 }
 
-function get_user_email()
+function get_admin_email()
 {
     global $g_db;
 
     if (empty($g_db))
     {
-        echo "Error: get_user_email() necessary params is null.";
+        echo "Error: get_admin_email() necessary params is null.";
         exit;
     }
 
@@ -2158,6 +2158,74 @@ function do_option_edit($option_name, $new_option_value)
     return;
 }
 
+function do_user_edit($option_name, $new_option_value)
+{
+    global $g_db;
+    global $g_login;
+
+    if (empty($option_name) || empty($g_login) || empty($g_db))
+    {
+        echo "Error: do_user_edit() necessary params is null.";
+        exit;
+    }
+
+    //modify the user
+	$logined_user = $g_login->get_logined_user();
+	if (!empty($logined_user))
+	{
+    	//modify the user
+    	$result = $g_db->get_tb_users_by_user_name($logined_user);
+    	if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+    	{
+    		$num = $result["num"];
+    		$rows = $result["rows"];
+    	
+    		$user = $rows[0];
+
+    		//the column 0 is user_id
+    		$user_id = $user[0];
+    		//the column 1 is user_name
+    		$user_name = $user[1];
+    		//the column 2 is user_password
+    		$user_password = $user[2];
+    		//the column 3 is user_registered
+    		$user_registered = $user[3];
+    		//the column 4 is user_email
+    		$user_email = $user[4];
+    		//the column 5 is user_level
+    		$user_level = $user[5];
+
+            $changed = false;
+
+            if ($option_name == "user_password")
+            {
+                $user_password = $new_option_value;
+                $changed = true;
+            }
+            if ($option_name == "user_email")
+            {
+                $user_email = $new_option_value;
+                $changed = true;
+            }
+
+    		if ($changed)
+    		{
+    			$user_array = array("user_id"=>"$user_id",
+    					"user_name"=>"$user_name",
+    					"user_password"=>"$user_password",
+    					"user_registered"=>"$user_registered",
+    					"user_email"=>"$user_email",
+    					"user_level"=>"$user_level");
+
+				//update the user
+				$g_db->insert_tb_users($user_array);
+    		}
+    	}
+   	}
+
+    return;
+}
+
 function do_admin_action()
 {
     //add or edit the categorys
@@ -2200,13 +2268,20 @@ function do_admin_action()
 
         do_commment_del($comment_id);
     }
-    //edit the option
+    //edit the option and user
     elseif (isset($_REQUEST["action"]) && 
         $_REQUEST["action"] == "edit_option")
     {
         foreach ($_POST as $key => $value)
         {
-            do_option_edit($key, $value);
+            if (($key == "user_password" ||$key == "user_email" ))
+            {
+                do_user_edit($key, $value);
+            }
+            else
+            {
+                do_option_edit($key, $value);
+            }
         }
     }
 
@@ -2416,4 +2491,67 @@ function make_comment_edit_list()
     return $comment_list_html;
 }
 
+function get_user_passwd()
+{
+	global $g_db;
+	global $g_login;
+
+	if (empty($g_db) || empty($g_login))
+	{
+		echo "Error: get_user_passwd() necessary params is null.";
+		exit;
+	}
+
+	$user_passwd = "";
+
+    $logined_user = $g_login->get_logined_user();
+    if (!empty($logined_user))
+    {
+		$result = $g_db->get_tb_users_by_user_level($logined_user);
+		if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+		{
+			$num = $result["num"];
+			$rows = $result["rows"];
+
+			$user = $rows[0];
+
+			//the column 2 is user_password
+			$user_passwd = $user[2];
+		}
+    }
+
+	return $user_passwd;
+}
+
+function get_user_email()
+{
+	global $g_db;
+	global $g_login;
+
+	if (empty($g_db) || empty($g_login))
+	{
+		echo "Error: get_user_email() necessary params is null.";
+		exit;
+	}
+
+	$user_email = "";
+
+	$logined_user = $g_login->get_logined_user();
+	if (!empty($logined_user))
+	{
+		$result = $g_db->get_tb_users_by_user_level($logined_user);
+		if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
+		{
+			$num = $result["num"];
+			$rows = $result["rows"];
+
+			$user = $rows[0];
+
+			//the column 4 is user_email
+			$user_email = $user[4];
+		}
+	}
+
+	return $user_email;
+}
 ?>
