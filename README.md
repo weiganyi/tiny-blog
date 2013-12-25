@@ -16,6 +16,14 @@ Run
 =====
 You can access the root directory of this blog in web browser, it will show the main page of this blog.<br/>
 
+Usage
+====
+First you should create a directory tinyblog into the Web root directory, such as 'tinyblog'.<br/>
+The second, download the source code into the 'tinyblog' directory.<br/>
+Third login into the cmd of mysql, create a database 'tinyblog', key in: 'create database tinyblog'; then import into the database file, key in: 'source /home/weigy/work/tinyblog/tinyblog_db.sql;'<br/>
+The last you can access the blog system through web browser<br/>
+
+
 Design
 =====
 Please refer to my blog(Chinese):<br/>
