@@ -25,15 +25,15 @@ class tb_db_mysql
         }
 
         //connect the database host
-        $this->db_handler = mysqli_connect($this->host, $this->user, $this->passwd, $this->database);
-        if (mysqli_connect_errno())
+        $this->db_handler = mysql_connect($this->host, $this->user, $this->passwd);
+        if (!$this->db_handler)
         {
             echo "Error: tb_db_mysql->__construct() Could not connect the database, please try again later.";
             exit;
         }
 
         //select the database 
-        mysqli_select_db($this->db_handler, $this->database);
+        mysql_select_db($this->database, $this->db_handler);
 
         return;
     }
@@ -43,7 +43,7 @@ class tb_db_mysql
         if ($this->db_handler)
         {
             //close the database
-            mysqli_close($this->db_handler);
+            mysql_close($this->db_handler);
         }
 
         return;
@@ -95,23 +95,23 @@ class tb_db_mysql
         $rows = array();
 
         //set mysql connect code to utf8
-        mysqli_query($this->db_handler, 'set names utf8');
+        mysql_query('set names utf8', $this->db_handler);
 
         //do the sql query
-        $result = mysqli_query($this->db_handler, $query);
+        $result = mysql_query($query, $this->db_handler);
 
         //get the result
-        $num_results = mysqli_num_rows($result);
+        $num_results = mysql_num_rows($result);
         for ($idx=0; $idx<$num_results; $idx++)
         {
-            $rows[$idx] = mysqli_fetch_row($result);
+            $rows[$idx] = mysql_fetch_row($result);
         }
 
         //construct a new array store the result
         $query_result = array("num"=>$num_results, "rows"=>$rows);
 
         //release the result
-        mysqli_free_result($result);
+        mysql_free_result($result);
 
         return $query_result;
     }
@@ -125,10 +125,10 @@ class tb_db_mysql
         }
 
         //set mysql connect code to utf8
-        mysqli_query($this->db_handler, 'set names utf8');
+        mysql_query('set names utf8', $this->db_handler);
 
         //do the sql query
-        $result = mysqli_query($this->db_handler, $query);
+        $result = mysql_query($query, $this->db_handler);
 
         return $result;
     }

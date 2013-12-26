@@ -24,6 +24,14 @@
     if (menu_management_li)
     {
         tb_add_event(menu_management_li, "mouseover", function(event){
+            var broswer = navigator.userAgent;
+            if (broswer.search(/firefox/gi) != -1)
+            {
+                //in order to display corrently in firefox
+                var menu_management_left_span = document.getElementById("menu_management_left_span");
+                menu_management_left_span.style.cssFloat = "none";
+            }
+
             var submenu = document.getElementById("menu_submenu_ul");
             submenu.style.display = "block";
             return;

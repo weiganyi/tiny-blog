@@ -236,6 +236,7 @@
 #menu_main_ul li a:visited, #menu_submenu_ul li a:visited, #menu_login_ul li a:visited
 {
 	color: black;
+	text-decoration: none;
 }
 
 #menu_main_ul li a:hover, #menu_submenu_ul li a:hover, #menu_login_ul li a:hover
@@ -247,6 +248,12 @@
 #menu_main_ul li a:active, #menu_submenu_ul li a:active, #menu_login_ul li a:active
 {
 	color: black;
+	text-decoration: none;
+}
+
+#menu_management_left_span
+{
+	float: left;
 }
 
 #menu_submenu_ul
@@ -319,6 +326,7 @@
 .sidebar_content_div a:visited
 {
 	color: #4169E1;             /* huang jia lan se */
+	text-decoration: none;
 }
 
 .sidebar_content_div a:hover
@@ -330,6 +338,12 @@
 .sidebar_content_div a:active
 {
 	color: #4169E1;             /* huang jia lan se */
+	text-decoration: none;
+}
+
+.sidebar_content_left_span
+{
+    float: left;
 }
 
 .sidebar_content_right_span
@@ -379,6 +393,7 @@
 {
 	color: black;
     font-size: 120%;
+	text-decoration: none;
 }
 
 .post_list_item_div_left a:hover
@@ -392,6 +407,7 @@
 {
 	color: black;
     font-size: 120%;
+	text-decoration: none;
 }
 
 .post_list_item_div_right
@@ -409,6 +425,7 @@
 .post_list_item_div_right a:visited
 {
 	color: #696969;             /* shen hui se */
+	text-decoration: none;
 }
 
 .post_list_item_div_right a:hover
@@ -420,6 +437,7 @@
 .post_list_item_div_right a:active
 {
 	color: #696969;             /* shen hui se */
+	text-decoration: none;
 }
 
 #page_num_div
@@ -437,6 +455,7 @@
 #page_num_div a:visited
 {
 	color: black;
+	text-decoration: none;
 }
 
 #page_num_div a:hover
@@ -448,6 +467,7 @@
 #page_num_div a:active
 {
 	color: black;
+	text-decoration: none;
 }
 
 /* foot.php style */
@@ -503,6 +523,7 @@
 #post_info_div a:visited, .comment_info_div a:visited
 {
 	color: #696969;             /* shen hui se */
+	text-decoration: none;
 }
 
 #post_info_div a:hover, .comment_info_div a:hover
@@ -514,6 +535,7 @@
 #post_info_div a:active, .comment_info_div a:active
 {
 	color: #696969;             /* shen hui se */
+	text-decoration: none;
 }
 
 .comment_info_div
@@ -659,6 +681,7 @@
 .cat_list_cat_op_td a:visited
 {
 	color: black;
+	text-decoration: none;
 }
 
 .cat_list_cat_op_td a:hover
@@ -670,6 +693,7 @@
 .cat_list_cat_op_td a:active
 {
 	color: black;
+	text-decoration: none;
 }
 
 #cat_list_new_cat_div
@@ -826,6 +850,7 @@
 .comment_list_content_td a:visited, .comment_list_op_td a:visited
 {
 	color: black;
+	text-decoration: none;
 }
 
 .comment_list_content_td a:hover, .comment_list_op_td a:hover
@@ -837,6 +862,7 @@
 .comment_list_content_td a:active, .comment_list_op_td a:active
 {
 	color: black;
+	text-decoration: none;
 }
 
 /* admin_config.php style */

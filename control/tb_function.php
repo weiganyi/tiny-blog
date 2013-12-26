@@ -75,20 +75,22 @@ function make_management_menu()
             $menu_html = 
                 "<li id='menu_management_li'>
                     <a href='#'>" . $g_lang_text["menu_managment"] . "</a>
-                    <ul id='menu_submenu_ul'>
-                        <li>
-                            <a href='index.php?page=admin_post'>" . $g_lang_text["menu_admin_post"] . "</a>
-                        </li>
-                        <li>
-                            <a href='index.php?page=admin_category'>" . $g_lang_text["menu_admin_category"] . "</a>
-                        </li>
-                        <li>
-                            <a href='index.php?page=admin_comment'>" . $g_lang_text["menu_admin_comment"] . "</a>
-                        </li>
-                        <li>
-                            <a href='index.php?page=admin_config'>" . $g_lang_text["menu_admin_config"] . "</a>
-                        </li>
-                    </ul>
+                    <span id='menu_management_left_span'>
+                        <ul id='menu_submenu_ul'>
+                            <li>
+                                <a href='index.php?page=admin_post'>" . $g_lang_text["menu_admin_post"] . "</a>
+                            </li>
+                            <li>
+                                <a href='index.php?page=admin_category'>" . $g_lang_text["menu_admin_category"] . "</a>
+                            </li>
+                            <li>
+                                <a href='index.php?page=admin_comment'>" . $g_lang_text["menu_admin_comment"] . "</a>
+                            </li>
+                            <li>
+                                <a href='index.php?page=admin_config'>" . $g_lang_text["menu_admin_config"] . "</a>
+                            </li>
+                        </ul>
+                    </span>
                 </li>";
         }
         else
@@ -514,7 +516,7 @@ function make_reading_list()
             $post_title = substr($post_title, 0, 20);
 
             $reading_list_html = $reading_list_html . 
-                            "<a href='index.php?page=post&post_id=$post_id'>$post_title</a>" .
+                            "<span class='sidebar_content_left_span'><a href='index.php?page=post&post_id=$post_id'>$post_title</a></span>" .
                             "<span class='sidebar_content_right_span'>($read_number)</span>" . 
                             "</br>";
         }
@@ -2554,4 +2556,31 @@ function get_user_email()
 
 	return $user_email;
 }
+
+function check_browser()
+{
+	if (empty($_SERVER["HTTP_USER_AGENT"]))
+	{
+		echo "Error: check_browser() necessary params is null.";
+		exit;
+	}
+
+    if (strops($_SERVER["HTTP_USER_AGENT"], "IE") != false)
+    {
+        return "IE";
+    }
+
+    if (strops($_SERVER["HTTP_USER_AGENT"], "Chrome") != false)
+    {
+        return "Chrome";
+    }
+
+    if (strops($_SERVER["HTTP_USER_AGENT"], "Chrome") != false)
+    {
+        return "Chrome";
+    }
+
+    return "IE";
+}
+
 ?>
