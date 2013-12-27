@@ -2509,7 +2509,7 @@ function get_user_passwd()
     $logined_user = $g_login->get_logined_user();
     if (!empty($logined_user))
     {
-		$result = $g_db->get_tb_users_by_user_level($logined_user);
+		$result = $g_db->get_tb_users_by_user_name($logined_user);
 		if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
 		{
 			$num = $result["num"];
@@ -2541,7 +2541,7 @@ function get_user_email()
 	$logined_user = $g_login->get_logined_user();
 	if (!empty($logined_user))
 	{
-		$result = $g_db->get_tb_users_by_user_level($logined_user);
+		$result = $g_db->get_tb_users_by_user_name($logined_user);
 		if (!empty($result["num"]) && !empty($result["rows"]) && $result["num"]==1)
 		{
 			$num = $result["num"];
