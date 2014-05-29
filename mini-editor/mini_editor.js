@@ -424,14 +424,6 @@ jQuery.fn.mini_editor =
         toolbar.find("#me_host_image_menu_frame").bind("load", this.host_image_menu_frame_load);
         toolbar.find("#me_host_image_menu_upload").bind("click", this.host_image_menu_upload_click);
 
-        toolbar.find(".me_host_image_menu_cell_left").bind("mouseenter", this.host_image_menu_cell_left_mouseenter);
-        toolbar.find(".me_host_image_menu_cell_left").bind("mouseleave", this.host_image_menu_cell_left_mouseleave);
-        toolbar.find(".me_host_image_menu_cell_right").bind("mouseenter", this.host_image_menu_cell_right_mouseenter);
-        toolbar.find(".me_host_image_menu_cell_right").bind("mouseleave", this.host_image_menu_cell_right_mouseleave);
-
-        toolbar.find(".me_host_image_menu_label_link").bind("click", this.host_image_menu_label_link_click);
-        toolbar.find(".me_host_image_menu_delete_link").bind("click", this.host_image_menu_delete_link_click);
-
         //me_emoticon_menu event
         toolbar.find("#me_emoticon_menu").bind("mouseenter", this.emoticon_menu_mouseenter);
         toolbar.find("#me_emoticon_menu").bind("mouseleave", this.emoticon_menu_mouseleave);
@@ -479,10 +471,12 @@ jQuery.fn.mini_editor =
             var submit_html = "<div id=\"me_submit_button\"><button type=\"button\">" + contury_lang["submit_text"] + "</button></div>";
         }
         var submit_obj = $(submit_html);
-        submit_obj.bind("click", this.submit_click);
 
         //add submit_obj after the iframe
         this.editor.after(submit_obj);
+
+        //bind the click function
+        $("#me_submit_button").children().bind("click", this.submit_click);
     },
 
     apply_contury_language : function(toolbar_html)
@@ -875,10 +869,10 @@ jQuery.fn.mini_editor =
         var image_html = "<td class=\"me_host_image_menu_cell_left\"><a href=\"#\" class=\"me_host_image_menu_label_link\">" 
                     + image_base_name 
                     + "</a></td>";
-        var image_insert = "<td class=\"me_host_image_menu_cell_right\"><a href=\"#\" class=\"me_host_image_menu_delete_link\">"
+        var image_delete = "<td class=\"me_host_image_menu_cell_right\"><a href=\"#\" class=\"me_host_image_menu_delete_link\">"
                     + contury_lang["Delete"]
                     + "</a></td>";
-        $(image_tr).append($(image_html)).append($(image_insert)).appendTo($("#me_host_image_menu_table"));
+        $(image_tr).append($(image_html)).append($(image_delete)).appendTo($("#me_host_image_menu_table"));
 
         //bind the event for the new inserted object
         $(".me_host_image_menu_cell_left").bind("mouseenter", obj.mini_editor.host_image_menu_cell_left_mouseenter);
@@ -1229,7 +1223,6 @@ jQuery.fn.mini_editor =
         if (editor_html && obj.mini_editor.options_list["text_page"])
         {
             //construct the form object
-            //var form_html = "<form method=\"post\" target=\"_self\"></form>";
             var form_html = "<form method=\"post\" target=\"_self\"></form>";
             var form_obj = $(form_html);
             var form_name = "me_" + obj.mini_editor.editor.attr("name") + "_form";

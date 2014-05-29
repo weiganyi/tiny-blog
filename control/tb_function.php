@@ -581,7 +581,7 @@ function make_comment_list()
                     $user_name = $user[1];
 
                     $post_title = substr($post_title, 0, 20);
-                    $comment_content = $user_name. ": " . $comment_content;
+                    $comment_content = $user_name . ": " . $comment_content;
                     $comment_content = substr($comment_content, 0, 20);
 
                     $comment_list_html = $comment_list_html . 
@@ -2570,9 +2570,9 @@ function check_browser()
         return "IE";
     }
 
-    if (strops($_SERVER["HTTP_USER_AGENT"], "Chrome") != false)
+    if (strops($_SERVER["HTTP_USER_AGENT"], "Firefox") != false)
     {
-        return "Chrome";
+        return "Firefox";
     }
 
     if (strops($_SERVER["HTTP_USER_AGENT"], "Chrome") != false)
