@@ -1139,7 +1139,7 @@ function make_page_link()
 
             //calculate the start page number will be displayed
             $start = 1;
-            if ($page_curr >= floor($page_display_num/2))
+            if ($page_curr > floor($page_display_num/2))
             {
                 $start = $page_curr - floor($page_display_num/2);
             }
