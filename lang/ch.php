@@ -20,7 +20,7 @@ $g_lang_text["reg_user_name"] = "用户名";
 $g_lang_text["reg_user_passwd"] = "密码";
 $g_lang_text["reg_user_mail"] = "邮箱";
 $g_lang_text["reg_submit"] = "注册";
-$g_lang_text["reg_goto_login"] = "我已有一个帐户，去登陆";
+$g_lang_text["reg_goto_login"] = "我已有一个帐户，去登录";
 $g_lang_text["reg_user_null"] = "提示：用户名为空.";
 $g_lang_text["reg_passwd_null"] = "提示：密码为空";
 $g_lang_text["reg_email_null"] = "提示：邮箱为空";
@@ -41,7 +41,7 @@ $g_lang_text["menu_admin_comment"] = "评论管理";
 $g_lang_text["menu_admin_config"] = "博客配置";
 $g_lang_text["menu_admin_login"] = "登录";
 $g_lang_text["menu_admin_register"] = "注册";
-$g_lang_text["menu_admin_logout"] = "退出登陆";
+$g_lang_text["menu_admin_logout"] = "退出登录";
 
 /* sidebar.php */
 $g_lang_text["sidebar_notice_title"] = "公告";

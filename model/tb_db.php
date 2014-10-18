@@ -14,6 +14,7 @@ class tb_db_mysql
     function __construct()
     {
         $this->get_default_config();
+        //$this->get_default_config2();
 
         if (empty($this->host) || 
             empty($this->user) || 
@@ -81,6 +82,17 @@ class tb_db_mysql
             }
         }
 
+        return;
+    }
+
+    function get_default_config2()
+    {
+        //get config from env
+        $this->host = getenv('JAE_MYSQL_IP') . ":" . getenv('JAE_MYSQL_PORT');
+        $this->user = getenv('JAE_MYSQL_USERNAME');
+        $this->passwd = getenv('JAE_MYSQL_PASSWORD');
+        $this->database = getenv('JAE_MYSQL_DBNAME');
+ 
         return;
     }
 
